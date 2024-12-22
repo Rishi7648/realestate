@@ -116,7 +116,7 @@
 
         <div id="land-form" class="property-section">
             <h2>List Your Land</h2>
-            <form>
+            <form action="./submit_land.php" method="post" enctype="multipart/form-data">
                 <label for="area">Area of Land:</label>
                 <input type="number" id="area" name="area" placeholder="Enter land area in sq.ft" required>
                 
@@ -141,7 +141,7 @@
 
         <div id="house-form" class="property-section">
             <h2>List Your House</h2>
-            <form action="./submit_land.php" method="post">
+            <form action="./submit_land.php" method="post" enctype="multipart/form-data">
                 <label for="floors">Total Floors:</label>
                 <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
                 
