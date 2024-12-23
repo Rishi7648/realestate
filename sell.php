@@ -116,15 +116,15 @@
 
         <div id="land-form" class="property-section">
             <h2>List Your Land</h2>
-            <form>
+            <form action="./submit_land.php" method="post" enctype="multipart/form-data">
                 <label for="area">Area of Land:</label>
-                <input type="number" id="area" name="area" placeholder="Enter land area in sq.ft" required>
+                <input type="text" id="area" name="area" placeholder="Enter land area in sq.ft" required>
                 
                 <label for="location">Location:</label>
                 <input type="text" id="location" name="location" placeholder="Enter location" required>
                 
                 <label for="price">Price:</label>
-                <input type="number" id="price" name="price" placeholder="Enter price in USD" required>
+                <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>
                 
                 <label for="map_image">Upload Map Image:</label>
                 <input type="file" id="map_image" name="map_image" accept="image/*" required>
@@ -141,7 +141,7 @@
 
         <div id="house-form" class="property-section">
             <h2>List Your House</h2>
-            <form action="./submit_land.php" method="post">
+            <form action="./submit_land.php" method="post" enctype="multipart/form-data">
                 <label for="floors">Total Floors:</label>
                 <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
                 

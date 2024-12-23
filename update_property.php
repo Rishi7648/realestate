@@ -1,9 +1,8 @@
 <?php
-// Database connection
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Retrieve form data
+    $id = $_POST['id'];
     $area = $_POST['area'];
     $location = $_POST['location'];
     $price = $_POST['price'];
@@ -18,9 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $upload_dir = "uploads/";
 
     // Save the map image
-    $map_image_path = $upload_dir . basename($map_image);
-    if (!move_uploaded_file($map_image_tmp, $map_image_path)) {
-        die("Failed to upload map image.");
+    if ($map_image) {
+        $map_image_path = $upload_dir . basename($map_image);
+        move_uploaded_file($map_image_tmp, $map_image_path);
+    } else {
+        $map_image_path = $_POST['existing_map_image']; // Retain old map image if no new one is uploaded
     }
 
     // Save property images
@@ -28,18 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     foreach ($property_images_tmp as $index => $tmp_name) {
         $file_name = basename($property_images[$index]);
         $file_path = $upload_dir . $file_name;
-        if (move_uploaded_file($tmp_name, $file_path)) {
-            $property_images_paths[] = $file_path;
-        } else {
-            die("Failed to upload property image: " . $file_name);
-        }
+        move_uploaded_file($tmp_name, $file_path);
+        $property_images_paths[] = $file_path;
     }
     $property_images_json = json_encode($property_images_paths);
 
-    // Prepare SQL statement
-    $sql = "INSERT INTO land_properties (area, location, price, map_image, property_images) 
-            VALUES (:area, :location, :price, :map_image, :property_images)";
-    $stmt = $conn->prepare($sql); // Ensure $sql is a string
+    // Prepare SQL statement to update property
+    $sql = "UPDATE land_properties 
+            SET area = :area, location = :location, price = :price, map_image = :map_image, property_images = :property_images
+            WHERE id = :id";
+    $stmt = $conn->prepare($sql);
 
     // Bind parameters
     $stmt->bindValue(':area', $area);
@@ -47,12 +46,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bindValue(':price', $price);
     $stmt->bindValue(':map_image', $map_image_path);
     $stmt->bindValue(':property_images', $property_images_json);
+    $stmt->bindValue(':id', $id);
 
-    // Execute query
+    // Execute the update query
     if ($stmt->execute()) {
-        echo "Land property listed successfully!";
+        echo "Property updated successfully!";
     } else {
-        echo "Error: " . implode(", ", $stmt->errorInfo()); // Show more detailed error
+        echo "Error: " . implode(", ", $stmt->errorInfo());
     }
 }
 ?>
