@@ -1,6 +1,7 @@
 <?php
 // Database connection
 include 'db.php';
+session_start(); // Corrected session_start()
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Retrieve form data
@@ -34,25 +35,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             die("Failed to upload property image: " . $file_name);
         }
     }
-    $property_images_json = json_encode($property_images_paths);
+    $property_images_json = json_encode($property_images_paths); // Convert paths to JSON
+
+    // Ensure the user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        die("User not logged in.");
+    }
+    $user_id = $_SESSION['user_id']; // Get the logged-in user's ID
 
     // Prepare SQL statement
-    $sql = "INSERT INTO land_properties (area, location, price, map_image, property_images) 
-            VALUES (:area, :location, :price, :map_image, :property_images)";
-    $stmt = $conn->prepare($sql); // Ensure $sql is a string
-
-    // Bind parameters
-    $stmt->bindValue(':area', $area);
-    $stmt->bindValue(':location', $location);
-    $stmt->bindValue(':price', $price);
-    $stmt->bindValue(':map_image', $map_image_path);
-    $stmt->bindValue(':property_images', $property_images_json);
+    $sql = "INSERT INTO land_properties (area, location, price, map_image, property_images, user_id) 
+            VALUES (:area, :location, :price, :map_image, :property_images, :user_id)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':area', $area);
+    $stmt->bindParam(':location', $location);
+    $stmt->bindParam(':price', $price);
+    $stmt->bindParam(':map_image', $map_image_path);
+    $stmt->bindParam(':property_images', $property_images_json);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
     // Execute query
     if ($stmt->execute()) {
         echo "Land property listed successfully!";
     } else {
-        echo "Error: " . implode(", ", $stmt->errorInfo()); // Show more detailed error
+        echo "Error: " . implode(", ", $stmt->errorInfo()); // Detailed error info for debugging
     }
 }
 ?>

@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include 'db.php';
@@ -11,12 +12,19 @@ if (!isset($_SESSION['user_id'])) {
 // Get the logged-in user's ID
 $user_id = $_SESSION['user_id'];
 
-// Fetch properties for the logged-in user
+// Fetch land properties for the logged-in user
 $sql = "SELECT * FROM land_properties WHERE user_id = :user_id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 $stmt->execute();
-$properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$land_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch house properties for the logged-in user
+$sql = "SELECT * FROM houseproperties WHERE user_id = :user_id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -73,12 +81,35 @@ $properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <h1>My Properties</h1>
-    <?php foreach ($properties as $property): ?>
+    
+    <h2>Land Properties</h2>
+    <?php foreach ($land_properties as $property): ?>
         <div class="property-card">
             <div class="property-details">
                 <p><strong>ID:</strong> <?php echo $property['id']; ?></p>
                 <p><strong>Area:</strong> <?php echo $property['area']; ?> sq.ft</p>
                 <p><strong>Location:</strong> <?php echo $property['location']; ?></p>
+                <p><strong>Price:</strong> <?php echo $property['price']; ?> NPR</p>
+            </div>
+            <div class="property-actions">
+                <a href="view_property.php?id=<?php echo $property['id']; ?>" class="action-btn">View</a>
+                <a href="update_property.php?id=<?php echo $property['id']; ?>" class="action-btn">Update</a>
+                <a href="delete_property.php?id=<?php echo $property['id']; ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
+            </div>
+        </div>
+    <?php endforeach; ?>
+    
+    <h2>House Properties</h2>
+    <?php foreach ($house_properties as $property): ?>
+        <div class="property-card">
+            <div class="property-details">
+                <p><strong>ID:</strong> <?php echo $property['id']; ?></p>
+                <p><strong>Floors:</strong> <?php echo $property['floors']; ?></p>
+                <p><strong>Bedrooms:</strong> <?php echo $property['bedrooms']; ?></p>
+                <p><strong>Living Rooms:</strong> <?php echo $property['living_rooms']; ?></p>
+                <p><strong>Kitchens:</strong> <?php echo $property['kitchens']; ?></p>
+                <p><strong>Washrooms:</strong> <?php echo $property['washrooms']; ?></p>
+                <p><strong>Attached Washrooms:</strong> <?php echo $property['attached_washrooms']; ?></p>
                 <p><strong>Price:</strong> <?php echo $property['price']; ?> NPR</p>
             </div>
             <div class="property-actions">

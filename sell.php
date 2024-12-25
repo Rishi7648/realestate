@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div id="house-form" class="property-section">
             <h2>List Your House</h2>
-            <form action="./submit_land.php" method="post" enctype="multipart/form-data">
+            <form action="./submit_house.php" method="post" enctype="multipart/form-data"></form>
                 <label for="floors">Total Floors:</label>
                 <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
                 
@@ -188,6 +188,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <label for="attached_washrooms">Attached Washrooms:</label>
                 <input type="number" id="attached_washrooms" name="attached_washrooms" placeholder="Enter number of attached washrooms" required>
+                
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" placeholder="Enter location" required>
+                
+                <label for="price">Price:</label>
+                <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>
                 
                 <label for="map_image">Upload Map Image:</label>
                 <input type="file" id="map_image" name="map_image" accept="image/*" required>
