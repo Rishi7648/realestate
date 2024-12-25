@@ -1,79 +1,11 @@
 <?php
-// Include database connection
 include 'db.php';
-session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "Please log in first!";
-    exit;
-}
-
-// Get the user_id from session
-$user_id = $_SESSION['user_id'];
-
-// Check if 'id' parameter is provided in the URL
-if (!isset($_GET['id'])) {
-    echo "Error: Property ID is missing.";
-    exit;
-}
-
-$property_id = $_GET['id'];
-echo var_dump($property_id);
-// Fetch property details based on the user_id and property_id
-$sql = "SELECT * FROM land_properties WHERE id = :id AND user_id = :user_id";
+// Fetch all properties
+$sql = "SELECT * FROM land_properties";
 $stmt = $conn->prepare($sql);
-$stmt->bindValue(':id', $property_id);
-$stmt->bindValue(':user_id', $user_id);
 $stmt->execute();
-$property = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if property is found
-if (!$property) {
-    echo "Property not found or you do not have permission to view this property.";
-    exit;
-}
-
-// Handle the delete action
-if (isset($_POST['delete'])) {
-    // Delete the property
-    $delete_sql = "DELETE FROM land_properties WHERE id = :id AND user_id = :user_id";
-    $delete_stmt = $conn->prepare($delete_sql);
-    $delete_stmt->bindValue(':id', $property_id);
-    $delete_stmt->bindValue(':user_id', $user_id);
-    if ($delete_stmt->execute()) {
-        echo "Property deleted successfully!";
-        exit;
-    } else {
-        echo "Error deleting property.";
-    }
-}
-
-// Handle the update action
-if (isset($_POST['update'])) {
-    // Retrieve and update form data
-    $area = $_POST['area'];
-    $location = $_POST['location'];
-    $price = $_POST['price'];
-
-    // Update property details
-    $update_sql = "UPDATE land_properties SET area = :area, location = :location, price = :price WHERE id = :id AND user_id = :user_id";
-    $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bindValue(':area', $area);
-    $update_stmt->bindValue(':location', $location);
-    $update_stmt->bindValue(':price', $price);
-    $update_stmt->bindValue(':id', $property_id);
-    $update_stmt->bindValue(':user_id', $user_id);
-
-    if ($update_stmt->execute()) {
-        echo "Property updated successfully!";
-        // Reload the page to show the updated values
-        header("Location: my_property.php?id=$property_id");
-        exit;
-    } else {
-        echo "Error updating property.";
-    }
-}
+$properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -81,133 +13,67 @@ if (isset($_POST['update'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Property</title>
+    <title>My Properties</title>
     <style>
-        /* Basic styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            width: 70%;
-            margin: 20px auto;
-            background: #fff;
             padding: 20px;
+        }
+        .property-card {
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .property-detail {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            padding: 20px;
+            transition: box-shadow 0.3s ease;
         }
-
-        .property-detail label {
-            font-weight: bold;
+        .property-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-
-        .property-detail p {
-            margin: 5px 0;
+        .property-details {
+            margin-bottom: 10px;
         }
-
-        input[type="text"], input[type="number"], input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .property-actions {
+            display: flex;
+            gap: 10px;
         }
-
-        .form-actions {
-            text-align: center;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .update-btn {
-            background-color: #28a745;
+        .action-btn {
+            padding: 10px 15px;
+            text-decoration: none;
             color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
-
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
         .delete-btn {
-            background-color: #dc3545;
-            color: white;
+            background-color: #DC3545;
         }
-
-        .cancel-btn {
-            background-color: #007bff;
-            color: white;
+        .delete-btn:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>My Property Details</h1>
-        <?php if (isset($property)): ?>
-        <div class="property-detail">
-            <label>Area:</label>
-            <p><?php echo htmlspecialchars($property['area']); ?> sq.ft</p>
-
-            <label>Location:</label>
-            <p><?php echo htmlspecialchars($property['location']); ?></p>
-
-            <label>Price:</label>
-            <p><?php echo htmlspecialchars($property['price']); ?> NPR</p>
-
-            <label>Map:</label>
-            <p><img src="<?php echo htmlspecialchars($property['map_image']); ?>" width="200" alt="Map"></p>
-
-            <label>Property Images:</label>
-            <p>
-                <?php
-                $images = json_decode($property['property_images'], true);
-                if (is_array($images)) {
-                    foreach ($images as $image) {
-                        echo "<img src='" . htmlspecialchars($image) . "' width='150' alt='Property Image' style='margin-right: 10px;'>";
-                    }
-                }
-                ?>
-            </p>
+    <h1>My Properties</h1>
+    <?php foreach ($properties as $property): ?>
+        <div class="property-card">
+            <div class="property-details">
+                <p><strong>ID:</strong> <?php echo $property['id']; ?></p>
+                <p><strong>Area:</strong> <?php echo $property['area']; ?> sq.ft</p>
+                <p><strong>Location:</strong> <?php echo $property['location']; ?></p>
+                <p><strong>Price:</strong> <?php echo $property['price']; ?> NPR</p>
+            </div>
+            <div class="property-actions">
+                <a href="view_property.php?id=<?php echo $property['id']; ?>" class="action-btn">View</a>
+                <a href="update_property.php?id=<?php echo $property['id']; ?>" class="action-btn">Update</a>
+                <a href="delete_property.php?id=<?php echo $property['id']; ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
+            </div>
         </div>
-
-        <h2>Update Property</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <label for="area">Area of Land:</label>
-            <input type="text" id="area" name="area" value="<?php echo htmlspecialchars($property['area']); ?>" required>
-
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($property['location']); ?>" required>
-
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" value="<?php echo htmlspecialchars($property['price']); ?>" required>
-
-            <div class="form-actions">
-                <button type="submit" name="update" class="btn update-btn">Update</button>
-                <button type="button" class="btn cancel-btn" onclick="window.location.href='my_property.php?id=<?php echo $property_id; ?>'">Cancel</button>
-            </div>
-        </form>
-
-        <h2>Delete Property</h2>
-        <form method="POST">
-            <div class="form-actions">
-                <button type="submit" name="delete" class="btn delete-btn">Delete Property</button>
-            </div>
-        </form>
-        <?php else: ?>
-            <p>No property found.</p>
-        <?php endif; ?>
-    </div>
+    <?php endforeach; ?>
 </body>
 </html>
