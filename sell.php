@@ -1,4 +1,33 @@
+<?php
+session_start();
+include 'db.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ensure the user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        echo "You must log in to add a property.";
+        exit;
+    }
+
+    $user_id = $_SESSION['user_id']; // Get the logged-in user's ID
+    $area = $_POST['area'];
+    $location = $_POST['location'];
+    $price = $_POST['price'];
+
+    // Insert property details along with user ID
+    $sql = "INSERT INTO land_properties (area, location, price, user_id) VALUES (:area, :location, :price, :user_id)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':area', $area);
+    $stmt->bindParam(':location', $location);
+    $stmt->bindParam(':price', $price);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    echo "Property added successfully!";
+}
+?>
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
