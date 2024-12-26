@@ -169,44 +169,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div id="house-form" class="property-section">
-            <h2>List Your House</h2>
-            <form action="./submit_house.php" method="post" enctype="multipart/form-data"></form>
-                <label for="floors">Total Floors:</label>
-                <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
-                
-                <label for="bedrooms">Bedrooms:</label>
-                <input type="number" id="bedrooms" name="bedrooms" placeholder="Enter number of bedrooms" required>
-                
-                <label for="living_rooms">Living Rooms:</label>
-                <input type="number" id="living_rooms" name="living_rooms" placeholder="Enter number of living rooms" required>
-                
-                <label for="kitchens">Kitchens:</label>
-                <input type="number" id="kitchens" name="kitchens" placeholder="Enter number of kitchens" required>
-                
-                <label for="washrooms">Washrooms:</label>
-                <input type="number" id="washrooms" name="washrooms" placeholder="Enter number of washrooms" required>
-                
-                <label for="attached_washrooms">Attached Washrooms:</label>
-                <input type="number" id="attached_washrooms" name="attached_washrooms" placeholder="Enter number of attached washrooms" required>
-                
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" placeholder="Enter location" required>
-                
-                <label for="price">Price:</label>
-                <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>
-                
-                <label for="map_image">Upload Map Image:</label>
-                <input type="file" id="map_image" name="map_image" accept="image/*" required>
-                
-                <label for="property_images">Upload Property Images:</label>
-                <input type="file" id="property_images" name="property_images[]" multiple accept="image/*">
-                
-                <div class="form-actions">
-                    <button type="button" class="cancel-btn" onclick="resetForms()">Cancel</button>
-                    <button type="submit" class="submit-btn">Submit</button>
-                </div>
-            </form>
+    <h2>List Your House</h2>
+    <form action="./submit_house.php" method="POST" enctype="multipart/form-data">
+        <label for="floors">Total Floors:</label>
+        <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
+        
+        <label for="bedrooms">Bedrooms:</label>
+        <input type="number" id="bedrooms" name="bedrooms" placeholder="Enter number of bedrooms" required>
+        
+        <label for="living_rooms">Living Rooms:</label>
+        <input type="number" id="living_rooms" name="living_rooms" placeholder="Enter number of living rooms" required>
+        
+        <label for="kitchens">Kitchens:</label>
+        <input type="number" id="kitchens" name="kitchens" placeholder="Enter number of kitchens" required>
+        
+        <label for="washrooms">Washrooms:</label>
+        <input type="number" id="washrooms" name="washrooms" placeholder="Enter number of washrooms" required>
+        
+        <label for="attached_washrooms">Attached Washrooms:</label>
+        <input type="number" id="attached_washrooms" name="attached_washrooms" placeholder="Enter number of attached washrooms" required>
+        
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" placeholder="Enter location" required>
+        
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>
+        
+        <label for="map_image">Upload Map Image:</label>
+        <input type="file" id="map_image" name="map_image" accept="image/*" required>
+        
+        <label for="property_images">Upload Property Images:</label>
+        <input type="file" id="property_images" name="property_images[]" multiple accept="image/*">
+        
+        <div class="form-actions">
+            <button type="button" class="cancel-btn" onclick="resetForms()">Cancel</button>
+            <button type="submit" class="submit-btn">Submit</button>
         </div>
+    </form>
+</div>
+
     </div>
 
     <script>

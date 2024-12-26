@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 include 'db.php';
@@ -99,25 +98,35 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     <?php endforeach; ?>
     
-    <h2>House Properties</h2>
-    <?php foreach ($house_properties as $property): ?>
-        <div class="property-card">
-            <div class="property-details">
-                <p><strong>ID:</strong> <?php echo $property['id']; ?></p>
-                <p><strong>Floors:</strong> <?php echo $property['floors']; ?></p>
-                <p><strong>Bedrooms:</strong> <?php echo $property['bedrooms']; ?></p>
-                <p><strong>Living Rooms:</strong> <?php echo $property['living_rooms']; ?></p>
-                <p><strong>Kitchens:</strong> <?php echo $property['kitchens']; ?></p>
-                <p><strong>Washrooms:</strong> <?php echo $property['washrooms']; ?></p>
-                <p><strong>Attached Washrooms:</strong> <?php echo $property['attached_washrooms']; ?></p>
-                <p><strong>Price:</strong> <?php echo $property['price']; ?> NPR</p>
-            </div>
-            <div class="property-actions">
-                <a href="view_property.php?id=<?php echo $property['id']; ?>" class="action-btn">View</a>
-                <a href="update_property.php?id=<?php echo $property['id']; ?>" class="action-btn">Update</a>
-                <a href="delete_property.php?id=<?php echo $property['id']; ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
-            </div>
+   <h2>House Properties</h2>
+<?php foreach ($house_properties as $property): ?>
+    <div class="property-card">
+        <div class="property-details">
+            <p><strong>ID:</strong> <?php echo $property['id']; ?></p>
+            <p><strong>Floors:</strong> <?php echo $property['floors']; ?></p>
+            <p><strong>Bedrooms:</strong> <?php echo $property['bedrooms']; ?></p>
+            <p><strong>Living Rooms:</strong> <?php echo $property['living_rooms']; ?></p>
+            <p><strong>Kitchens:</strong> <?php echo $property['kitchens']; ?></p>
+            <p><strong>Washrooms:</strong> <?php echo $property['washrooms']; ?></p>
+            <p><strong>Attached Washrooms:</strong> <?php echo $property['attached_washrooms']; ?></p>
+            <p><strong>Location:</strong> <?php echo $property['location']; ?></p>
+            <p><strong>Price:</strong> <?php echo $property['price']; ?> NPR</p>
+            <p><strong>Map Image:</strong></p>
+            <img src="<?php echo $property['map_image']; ?>" alt="Map Image" style="width: 100%; max-width: 300px;">
+            <p><strong>Property Images:</strong></p>
+            <?php
+            $property_images = json_decode($property['property_images'], true);
+            foreach ($property_images as $image): ?>
+                <img src="<?php echo $image; ?>" alt="Property Image" style="width: 100%; max-width: 300px;">
+            <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
+        <div class="property-actions">
+            <a href="view_property.php?id=<?php echo $property['id']; ?>" class="action-btn">View</a>
+            <a href="update_property.php?id=<?php echo $property['id']; ?>" class="action-btn">Update</a>
+            <a href="delete_property.php?id=<?php echo $property['id']; ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
+        </div>
+    </div>
+<?php endforeach; ?>
+
 </body>
 </html>
