@@ -13,11 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 
     if ($property) {
         // Delete the map image and property images from the server
-        unlink($property['map_image']);
-        $property_images = json_decode($property['property_images'], true);
-        foreach ($property_images as $image_path) {
-            unlink($image_path);
-        }
+        
+       
 
         // Delete the property from the database
         $delete_sql = "DELETE FROM land_properties WHERE id = :id";

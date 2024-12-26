@@ -4,8 +4,8 @@ include 'db.php';
 if (isset($_GET['id'])) {
     $property_id = $_GET['id'];
 
-    // Fetch property details based on the property ID
-    $sql = "SELECT * FROM land_properties WHERE id = :id";
+    // Fetch property details based on the property ID from the house_properties table
+    $sql = "SELECT * FROM houseproperties WHERE id = :id";
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(':id', $property_id);
     $stmt->execute();
@@ -18,7 +18,12 @@ if (isset($_GET['id'])) {
 
     // Display the property details
     echo "<h2>Property Details</h2>";
-    echo "<p><strong>Area:</strong> " . $property['area'] . " </p>";
+    echo "<p><strong>Total Floors:</strong> " . $property['floors'] . "</p>";
+    echo "<p><strong>Bedrooms:</strong> " . $property['bedrooms'] . "</p>";
+    echo "<p><strong>Living Rooms:</strong> " . $property['living_rooms'] . "</p>";
+    echo "<p><strong>Kitchens:</strong> " . $property['kitchens'] . "</p>";
+    echo "<p><strong>Washrooms:</strong> " . $property['washrooms'] . "</p>";
+    echo "<p><strong>Attached Washrooms:</strong> " . $property['attached_washrooms'] . "</p>";
     echo "<p><strong>Location:</strong> " . $property['location'] . "</p>";
     echo "<p><strong>Price:</strong> " . $property['price'] . " NPR</p>";
 

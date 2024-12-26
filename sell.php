@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>List Your Land</h2>
             <form action="./submit_land.php" method="post" enctype="multipart/form-data">
                 <label for="area">Area of Land:</label>
-                <input type="text" id="area" name="area" placeholder="Enter land area in sq.ft" required>
+                <input type="text" id="area" name="area" placeholder="Enter land area" required>
                 
                 <label for="location">Location:</label>
                 <input type="text" id="location" name="location" placeholder="Enter location" required>
