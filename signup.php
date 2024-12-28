@@ -207,10 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <span class="eye-icon" onclick="togglePasswordVisibility()">&#128065;</span>
             </div>
             
-            <select name="role" required>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select>
+            
             
             <button type="submit">Signup</button>
         </form>
