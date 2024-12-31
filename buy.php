@@ -1,24 +1,59 @@
 <?php
 session_start();
-include 'db.php';
+include 'db.php'; // Assuming db.php is your database connection file
 
-// Ensure user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "You must log in to view properties.";
-    exit;
+// Fetch land and house properties filtered by location if provided
+$search_location = isset($_GET['search_location']) ? trim($_GET['search_location']) : '';
+
+// SQL query to fetch land and house properties sorted by 'created_at' in descending order
+$sql_land = "SELECT * FROM land_properties WHERE status = 'approved' ORDER BY created_at DESC, is_featured DESC";
+$sql_house = "SELECT * FROM houseproperties WHERE status = 'approved' ORDER BY created_at DESC, is_featured DESC";
+
+if (!empty($search_location)) {
+    $sql_land = "SELECT * FROM land_properties WHERE status = 'approved' AND location LIKE :location ORDER BY created_at DESC, is_featured DESC";
+    $sql_house = "SELECT * FROM houseproperties WHERE status = 'approved' AND location LIKE :location ORDER BY created_at DESC, is_featured DESC";
+
+    $stmt_land = $conn->prepare($sql_land);
+    $stmt_house = $conn->prepare($sql_house);
+    $search_param = "%{$search_location}%";
+    $stmt_land->bindParam(':location', $search_param);
+    $stmt_house->bindParam(':location', $search_param);
+} else {
+    $stmt_land = $conn->prepare($sql_land);
+    $stmt_house = $conn->prepare($sql_house);
 }
 
-// Fetch approved land properties
-$sql_land = "SELECT * FROM land_properties WHERE status = 'approved'";
-$stmt_land = $conn->prepare($sql_land);
 $stmt_land->execute();
-$land_properties = $stmt_land->fetchAll(PDO::FETCH_ASSOC);
-
-// Fetch approved house properties
-$sql_house = "SELECT * FROM houseproperties WHERE status = 'approved'";
-$stmt_house = $conn->prepare($sql_house);
 $stmt_house->execute();
+
+$land_properties = $stmt_land->fetchAll(PDO::FETCH_ASSOC);
 $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
+
+// Update approval date when an admin approves a property
+if (isset($_POST['approve_property'])) {
+    $property_id = $_POST['property_id'];
+    $property_type = $_POST['property_type'];
+
+    // Get current date
+    $approval_date = date('Y-m-d H:i:s');
+    
+    if ($property_type === 'land') {
+        // Update land property
+        $sql_approve_land = "UPDATE land_properties SET status = 'approved', approval_date = :approval_date WHERE id = :property_id";
+        $stmt_approve_land = $conn->prepare($sql_approve_land);
+        $stmt_approve_land->bindParam(':approval_date', $approval_date);
+        $stmt_approve_land->bindParam(':property_id', $property_id);
+        $stmt_approve_land->execute();
+    } elseif ($property_type === 'house') {
+        // Update house property
+        $sql_approve_house = "UPDATE houseproperties SET status = 'approved', approval_date = :approval_date WHERE id = :property_id";
+        $stmt_approve_house = $conn->prepare($sql_approve_house);
+        $stmt_approve_house->bindParam(':approval_date', $approval_date);
+        $stmt_approve_house->bindParam(':property_id', $property_id);
+        $stmt_approve_house->execute();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -27,34 +62,291 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buy Properties</title>
+    
+    <style>
+    /* General Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    .container {
+        width: 90%;
+        margin: auto;
+        padding: 20px;
+        max-width: 1200px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    form {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    form input[type="text"] {
+        padding: 12px;
+        font-size: 1rem;
+        width: 60%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    form button {
+        padding: 12px 20px;
+        font-size: 1rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Tab Buttons Styles */
+    .view-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .viewland, .viewhouse {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        background-color: #3498db; /* Blue shade */
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .view-buttons button:hover {
+        background-color: #2980b9; /* Darker blue shade */
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-3px);
+    }
+
+    .view-buttons button:focus {
+        outline: none;
+        background-color: #1e6f9f; /* Even darker blue */
+    }
+
+    .view-buttons button.active {
+        background-color: #2ecc71; /* Green for active */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        color: #fff;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .active-tab {
+        display: block;
+    }
+
+    /* Property Card Styles */
+    .property {
+        background-color: white;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: transform 0.3s;
+    }
+
+    .property:hover {
+        transform: translateY(-5px);
+    }
+
+    .property img {
+        max-width: 600px;
+        height: auto;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .property h3 {
+        color: #34495e;
+        margin-bottom: 10px;
+    }
+
+    .property p {
+        margin: 5px 0;
+        color: #555;
+    }
+
+    .property h4 {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-top: 15px;
+    }
+
+    .property ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .property ul li {
+        margin: 10px 0;
+    }
+
+    /* Footer Styles */
+    footer {
+        background-color: #333;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+
+    footer p {
+        margin: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        form input[type="text"] {
+            width: 100%;
+        }
+
+        form button {
+            width: 100%;
+        }
+    }
+</style>
 </head>
+
 <body>
-    <h1>Available Properties</h1>
+    <div class="container">
+        <h1>Buy Properties</h1>
+        
+        <!-- Search Form -->
+        <form method="GET" action="" style="text-align: center; margin-bottom: 20px;">
+            <input type="text" name="search_location" placeholder="Search by location" 
+                   value="<?= htmlspecialchars($search_location) ?>" 
+                   style="padding: 10px; font-size: 1em; width: 60%; border: 1px solid #ccc; border-radius: 5px;">
+            <button type="submit" style="padding: 10px 20px; font-size: 1.1em;">Search</button>
+        </form>
 
-    <h2>Land Properties</h2>
-    <?php if (!empty($land_properties)): ?>
-        <?php foreach ($land_properties as $property): ?>
-            <div>
-                <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
-                <p>Area: <?= htmlspecialchars($property['area']) ?> sq ft</p>
-                <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No land properties available.</p>
-    <?php endif; ?>
+        <!-- Buttons for viewing Land and House properties -->
+        <div style="text-align: center;">
+            <button id="viewLand" class="viewland" onclick="toggleTab('land')">View Land</button>
+            <button id="viewHouse" class="viewhouse" onclick="toggleTab('house')">View House</button>
+        </div>
 
-    <h2>House Properties</h2>
-    <?php if (!empty($house_properties)): ?>
-        <?php foreach ($house_properties as $property): ?>
-            <div>
-                <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
-                <p>Floors: <?= htmlspecialchars($property['floors']) ?></p>
-                <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No house properties available.</p>
-    <?php endif; ?>
+        <!-- Display Land Properties -->
+        <div id="landProperties" class="tab-content">
+            <h2>Land Properties</h2>
+            <?php if (!empty($land_properties)): ?>
+                <?php foreach ($land_properties as $property): ?>
+                    <div class="property">
+                        <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
+                        <p>Area: <?= htmlspecialchars($property['area']) ?> </p>
+                        <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                        <h4>Map:</h4>
+                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
+                        <h4>Images:</h4>
+                        <?php
+                        $images = json_decode($property['property_images'], true);
+                        if ($images) {
+                            foreach ($images as $image) {
+                                echo '<img src="' . htmlspecialchars($image) . '" alt="Property Image" style="max-width: 600px; margin-right: 10px;">';
+                            }
+                        }
+                        ?>
+                        <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
+                        <h5>If you want to buy property. You have to contact in this no:9823167724</h5>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No land properties available.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Display House Properties -->
+        <div id="houseProperties" class="tab-content">
+            <h2>House Properties</h2>
+            <?php if (!empty($house_properties)): ?>
+                <?php foreach ($house_properties as $property): ?>
+                    <div class="property">
+                        <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
+                        <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                        <h4>House Details:</h4>
+                        <ul>
+                            <li>Total Floors: <?= htmlspecialchars($property['floors']) ?></li>
+                            <li>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></li>
+                            <li>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></li>
+                            <li>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></li>
+                            <li>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></li>
+                            <li>Attached Washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?></li>
+                        </ul>
+                        <h4>Map:</h4>
+                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
+                        <h4>Images:</h4>
+                        <?php
+                        $images = json_decode($property['property_images'], true);
+                        if ($images) {
+                            foreach ($images as $image) {
+                                echo '<img src="' . htmlspecialchars($image) . '" alt="Property Image" style="max-width: 600px; margin-right: 10px;">';
+                            }
+                        }
+                        ?>
+                        <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No house properties available.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <footer>
+        <p>Company Details | Contact: +977 123456789 | Email: info@example.com | Location: Kathmandu, Nepal</p>
+    </footer>
+
+    <script>
+        // JavaScript to toggle between the tabs for Land and House properties
+        function toggleTab(tab) {
+            var landTab = document.getElementById('landProperties');
+            var houseTab = document.getElementById('houseProperties');
+            var landButton = document.getElementById('viewLand');
+            var houseButton = document.getElementById('viewHouse');
+
+            if (tab === 'land') {
+                landTab.classList.add('active-tab');
+                houseTab.classList.remove('active-tab');
+                landButton.classList.add('active');
+                houseButton.classList.remove('active');
+            } else {
+                houseTab.classList.add('active-tab');
+                landTab.classList.remove('active-tab');
+                houseButton.classList.add('active');
+                landButton.classList.remove('active');
+            }
+        }
+
+        // Initialize the first tab
+        toggleTab('land');
+    </script>
 </body>
 </html>

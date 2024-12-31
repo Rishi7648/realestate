@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $property_images_json = json_encode($property_images_paths);
 
-    // Convert the map image path to a JSON array format
-    $map_image_json = json_encode([$map_image_target]);
+    // Do not use json_encode for the map image path
+    $map_image_path = $map_image_target; // Store as a plain string
 
     try {
         // Insert data into the database using PDO
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':attached_washrooms', $attached_washrooms, PDO::PARAM_INT);
         $stmt->bindParam(':location', $location, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_STR);
-        $stmt->bindParam(':map_image', $map_image_json, PDO::PARAM_STR); // Insert JSON array for map image
+        $stmt->bindParam(':map_image', $map_image_path, PDO::PARAM_STR); // Store as plain string
         $stmt->bindParam(':property_images', $property_images_json, PDO::PARAM_STR);
 
         if ($stmt->execute()) {

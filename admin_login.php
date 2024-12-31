@@ -2,62 +2,51 @@
 include 'db.php';
 session_start();
 
-// Check if the admin is already logged in
-if (isset($_SESSION['admin_id'])) {
-    // Admin is logged in, show the logout button
-    if (isset($_POST['logout'])) {
-        // Destroy the session to log out the admin
-        session_destroy();
-        header("Location: admin_login.php"); // Redirect to login page
-        exit();
-    }
-} else {
-    // Handle admin login and signup logic as before
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        if (isset($_POST['signup'])) {
-            // Handle admin signup
-            $username = $_POST['username'];
-            $email = $_POST['email'];
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['signup'])) {
+        // Handle admin signup
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-            // Check if admin email already exists
-            $sql = "SELECT * FROM admin WHERE email = :email";
+        // Check if admin email already exists
+        $sql = "SELECT * FROM admin WHERE email = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        $existingAdmin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingAdmin) {
+            echo "<p>Email already registered!</p>";
+        } else {
+            // Insert new admin into the database
+            $sql = "INSERT INTO admin (username, email, password) VALUES (:username, :email, :password)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute(['email' => $email]);
-            $existingAdmin = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute(['username' => $username, 'email' => $email, 'password' => $password]);
+            echo "<p>Admin account created successfully. You can now login.</p>";
+        }
+    } elseif (isset($_POST['login'])) {
+        // Handle admin login
+        $email = $_POST['email'];
+        $password = $_POST['password'];
 
-            if ($existingAdmin) {
-                echo "<p>Email already registered!</p>";
-            } else {
-                // Insert new admin into the database
-                $sql = "INSERT INTO admin (username, email, password) VALUES (:username, :email, :password)";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute(['username' => $username, 'email' => $email, 'password' => $password]);
-                echo "<p>Admin account created successfully. You can now login.</p>";
-            }
-        } elseif (isset($_POST['login'])) {
-            // Handle admin login
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+        $sql = "SELECT * FROM admin WHERE email = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $sql = "SELECT * FROM admin WHERE email = :email";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute(['email' => $email]);
-            $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($admin && password_verify($password, $admin['password'])) {
+            $_SESSION['admin_id'] = $admin['id'];
+            $_SESSION['username'] = $admin['username'];
 
-            if ($admin && password_verify($password, $admin['password'])) {
-                $_SESSION['admin_id'] = $admin['id'];
-                $_SESSION['username'] = $admin['username'];
-
-                header("Location: admin.php");
-                exit();
-            } else {
-                echo "<p>Invalid admin credentials!</p>";
-            }
+            header("Location: admin.php");
+            exit();
+        } else {
+            echo "<p>Invalid admin credentials!</p>";
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,30 +120,12 @@ if (isset($_SESSION['admin_id'])) {
             transform: translateY(-50%);
             cursor: pointer;
         }
-        .logout-btn {
-            width: 100%;
-            padding: 15px;
-            background: #e74c3c;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-        }
     </style>
 </head>
 <body>
 
-<?php if (isset($_SESSION['admin_id'])): ?>
-    <!-- If admin is logged in, show the admin panel with the logout button -->
-    <div class="form-container">
-        <h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
-        <form method="POST">
-            <button type="submit" name="logout" class="logout-btn">Logout</button>
-        </form>
-    </div>
-<?php else: ?>
-    <!-- Admin Login & Signup forms as before -->
+
+    <!-- Admin Login & Signup forms -->
     <div class="form-container" id="login-form">
         <h2>Admin Login</h2>
         <form method="POST">
@@ -181,7 +152,7 @@ if (isset($_SESSION['admin_id'])) {
         </form>
         <p class="toggle-form" onclick="toggleForm('login-form')">Already have an account? Login</p>
     </div>
-<?php endif; ?>
+
 
 <script>
     function toggleForm(formId) {
@@ -202,5 +173,6 @@ if (isset($_SESSION['admin_id'])) {
         }
     }
 </script>
+
 </body>
 </html>

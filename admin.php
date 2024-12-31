@@ -8,19 +8,28 @@ if (!isset($_SESSION['admin_id'])) {
     exit;
 }
 
-// Fetch all land properties with user details
-$sql_land = "SELECT lp.*, u.first_name, u.last_name, u.phone, u.email, lp.map_image 
+// Fetch search keyword if provided
+$search_keyword = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+// Fetch all land properties with user details, filtered by search keyword
+$sql_land = "SELECT lp.*, u.first_name, u.last_name, u.phone, u.email, lp.map_image, lp.status 
              FROM land_properties lp
-             JOIN users u ON lp.user_id = u.id";
+             JOIN users u ON lp.user_id = u.id
+             WHERE lp.location LIKE :keyword
+             ORDER BY lp.created_at DESC"; // Sorting by creation date (latest first)
 $stmt_land = $conn->prepare($sql_land);
+$stmt_land->bindValue(':keyword', '%' . $search_keyword . '%', PDO::PARAM_STR);
 $stmt_land->execute();
 $land_properties = $stmt_land->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch all house properties with user details
-$sql_house = "SELECT hp.*, u.first_name, u.last_name, u.phone, u.email, hp.map_image
+// Fetch all house properties with user details, filtered by search keyword
+$sql_house = "SELECT hp.*, u.first_name, u.last_name, u.phone, u.email, hp.map_image, hp.status
               FROM houseproperties hp
-              JOIN users u ON hp.user_id = u.id";
+              JOIN users u ON hp.user_id = u.id
+              WHERE hp.location LIKE :keyword
+              ORDER BY hp.created_at DESC"; // Sorting by creation date (latest first)
 $stmt_house = $conn->prepare($sql_house);
+$stmt_house->bindValue(':keyword', '%' . $search_keyword . '%', PDO::PARAM_STR);
 $stmt_house->execute();
 $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -28,194 +37,124 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <style>
-        /* Add your existing styles here */
-    </style>
-</head>
-
-<body>
-<style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f4f4f9;
+            color: #333;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
         .container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: white;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 2em;
         }
-
-        h2 {
-            color: #444;
-            margin-bottom: 10px;
-        }
-
-        .property {
-            background-color: #fafafa;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .property h3 {
-            color: #333;
-            font-size: 1.2em;
-        }
-
-        .property p {
-            color: #555;
-            margin: 5px 0;
-        }
-
-        .property h4 {
-            margin-top: 15px;
-            color: #666;
-        }
-
-        .property img {
-            max-width: 600px; /* Ensure image scales well */
-            height: auto;
-            margin: 5px;
-            border-radius: 5px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            margin: 10px 5px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-        }
-
-        .approve {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .approve:hover {
-            background-color: #218838;
-        }
-
-        .reject {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .reject:hover {
-            background-color: #c82333;
-        }
-
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .property {
-                padding: 15px;
-            }
-
-            .property img {
-                max-width: 80%; /* Adjust for mobile screens */
-            }
-
-            .btn {
-                font-size: 0.9em;
-                padding: 8px 16px;
-            }
-        }
-
-        /* User Details Styles */
-        .user-details {
-            background-color: #fff;
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-details h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .user-details table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .user-details table th, .user-details table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .user-details table th {
-            background-color: #f8f8f8;
-            color: #333;
-        }
-
-        .user-details table td {
-            color: #555;
-        }
-
-        /* Tab Styles */
         .tab-btns {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
-
         .tab-btn {
-            background-color: #007bff;
-            color: white;
             padding: 10px 20px;
             margin: 0 10px;
+            background-color: #007bff;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
         }
-
-        .tab-btn:hover {
-            background-color: #0056b3;
-        }
-
         .tab-btn.active {
             background-color: #0056b3;
         }
-
         .property-list {
             display: none;
         }
-
         .property-list.active {
             display: block;
         }
+        .property {
+            border-bottom: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        .property h3 {
+            font-size: 1.5em;
+        }
+        .property img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .approve {
+            background-color: #28a745;
+            color: white;
+        }
+        .reject {
+            background-color: #dc3545;
+            color: white;
+        }
+        .search-bar input {
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .tab-btns {
+                flex-direction: column;
+            }
+        }
     </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="window.location.href='admin_logout.php'">Logout</button>
+
     <div class="container">
         <h1>Admin Panel</h1>
+
+        <!-- Search Bar -->
+        <div class="search-bar" style="margin-bottom: 20px;">
+            <form method="GET" action="">
+                <input type="text" name="search" value="<?= htmlspecialchars($search_keyword) ?>" placeholder="Search by location">
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <!-- Tab buttons for toggling between house and land properties -->
         <div class="tab-btns">
@@ -230,26 +169,23 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($land_properties as $property): ?>
                     <div class="property">
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
-                        <p>Area: <?= htmlspecialchars($property['area']) ?> sq ft</p>
+                        <p>Area: <?= htmlspecialchars($property['area']) ?></p>
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                        <p>Status: <?= htmlspecialchars($property['status']) ?></p>
                         <p>Uploaded By: <?= htmlspecialchars($property['first_name']) ?> <?= htmlspecialchars($property['last_name']) ?></p>
                         <p>Email: <?= htmlspecialchars($property['email']) ?></p>
                         <p>Phone Number: <?= htmlspecialchars($property['phone']) ?></p>
-                        <p>User ID: <?= htmlspecialchars($property['user_id']) ?></p>
-                        
                         <h4>Map:</h4>
-                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map"> <!-- Increased size automatically based on the updated styles -->
-
+                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
                         <h4>Images:</h4>
                         <?php
-    $images = json_decode($property['property_images'], true);
-    if ($images && is_array($images)) {
-        foreach ($images as $image) {
-            echo "<img src='$image' alt='Property Image'>";
-        }
-    }
-?>
-
+                        $images = json_decode($property['property_images'], true);
+                        if ($images && is_array($images)) {
+                            foreach ($images as $image) {
+                                echo "<img src='$image' alt='Property Image'>";
+                            }
+                        }
+                        ?>
                         <button class="btn approve" onclick="handleAction(<?= $property['id'] ?>, 'land', 1)">Approve</button>
                         <button class="btn reject" onclick="handleAction(<?= $property['id'] ?>, 'land', 0)">Reject</button>
                     </div>
@@ -271,33 +207,21 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
                         <p>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></p>
                         <p>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></p>
                         <p>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></p>
-                        <p>Attached Washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?: 'Not Available' ?></p>
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                        <p>Status: <?= htmlspecialchars($property['status']) ?></p>
                         <p>Uploaded By: <?= htmlspecialchars($property['first_name']) ?> <?= htmlspecialchars($property['last_name']) ?></p>
                         <p>Email: <?= htmlspecialchars($property['email']) ?></p>
                         <p>Phone Number: <?= htmlspecialchars($property['phone']) ?></p>
-                        <p>User ID: <?= htmlspecialchars($property['user_id']) ?></p>
-                        
                         <h4>Map:</h4>
-<?php
-    // Ensure the map image path is correct
-    $mapImage = htmlspecialchars($property['map_image']);
-    // Check if the file exists at the specified path
-    if (file_exists($mapImage)) {
-        echo "<img src='$mapImage' alt='Property Map'>";
-    } else {
-        echo "<p>Map image not available.</p>";
-    }
-?>
-
+                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
                         <h4>Images:</h4>
                         <?php
-                            $images = json_decode($property['property_images'], true);
-                            if ($images && is_array($images)) {
-                                foreach ($images as $image) {
-                                    echo "<img src='$image' alt='Property Image'>";
-                                }
+                        $images = json_decode($property['property_images'], true);
+                        if ($images && is_array($images)) {
+                            foreach ($images as $image) {
+                                echo "<img src='$image' alt='Property Image'>";
                             }
+                        }
                         ?>
                         <button class="btn approve" onclick="handleAction(<?= $property['id'] ?>, 'house', 1)">Approve</button>
                         <button class="btn reject" onclick="handleAction(<?= $property['id'] ?>, 'house', 0)">Reject</button>
@@ -323,11 +247,25 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
                 landBtn.classList.add('active');
                 houseBtn.classList.remove('active');
             } else {
-                houseTab.classList.add('active');
                 landTab.classList.remove('active');
-                houseBtn.classList.add('active');
+                houseTab.classList.add('active');
                 landBtn.classList.remove('active');
+                houseBtn.classList.add('active');
             }
+        }
+
+        // Handle approve/reject action
+        function handleAction(propertyId, propertyType, action) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "approve_reject_property.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Property status updated!");
+                    location.reload();
+                }
+            };
+            xhr.send("property_id=" + propertyId + "&property_type=" + propertyType + "&action=" + action);
         }
     </script>
 </body>
