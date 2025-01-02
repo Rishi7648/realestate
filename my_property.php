@@ -107,9 +107,10 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="property-card">
                     <div class="property-details">
                         <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
-                        <p><strong>Area:</strong> <?php echo htmlspecialchars($property['area']); ?> </p>
+                        <p><strong>Area:</strong> <?php echo htmlspecialchars($property['area']); ?></p>
                         <p><strong>Location:</strong> <?php echo htmlspecialchars($property['location']); ?></p>
                         <p><strong>Price:</strong> <?php echo htmlspecialchars($property['price']); ?> NPR</p>
+                        <p><strong>Status:</strong> <?php echo htmlspecialchars($property['status']); ?></p>
                     </div>
                     <div class="property-actions">
                         <a href="view_property.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
@@ -123,34 +124,34 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
 
-   <!-- House Properties Section -->
-<h2>House Properties</h2>
-<div class="property-container">
-    <?php if (!empty($house_properties)): ?>
-        <?php foreach ($house_properties as $property): ?>
-            <div class="property-card">
-                <div class="property-details">
-                    <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
-                    <p><strong>Floors:</strong> <?php echo htmlspecialchars($property['floors']); ?></p>
-                    <p><strong>Bedrooms:</strong> <?php echo htmlspecialchars($property['bedrooms']); ?></p>
-                    <p><strong>Living Rooms:</strong> <?php echo htmlspecialchars($property['living_rooms']); ?></p>
-                    <p><strong>Kitchens:</strong> <?php echo htmlspecialchars($property['kitchens']); ?></p>
-                    <p><strong>Washrooms:</strong> <?php echo htmlspecialchars($property['washrooms']); ?></p>
-                    <p><strong>Attached Washrooms:</strong> <?php echo htmlspecialchars($property['attached_washrooms']); ?></p>
-                    <p><strong>Location:</strong> <?php echo htmlspecialchars($property['location']); ?></p>
-                    <p><strong>Price:</strong> <?php echo htmlspecialchars($property['price']); ?> NPR</p>
+    <!-- House Properties Section -->
+    <h2>House Properties</h2>
+    <div class="property-container">
+        <?php if (!empty($house_properties)): ?>
+            <?php foreach ($house_properties as $property): ?>
+                <div class="property-card">
+                    <div class="property-details">
+                        <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
+                        <p><strong>Floors:</strong> <?php echo htmlspecialchars($property['floors']); ?></p>
+                        <p><strong>Bedrooms:</strong> <?php echo htmlspecialchars($property['bedrooms']); ?></p>
+                        <p><strong>Living Rooms:</strong> <?php echo htmlspecialchars($property['living_rooms']); ?></p>
+                        <p><strong>Kitchens:</strong> <?php echo htmlspecialchars($property['kitchens']); ?></p>
+                        <p><strong>Washrooms:</strong> <?php echo htmlspecialchars($property['washrooms']); ?></p>
+                        <p><strong>Attached Washrooms:</strong> <?php echo htmlspecialchars($property['attached_washrooms']); ?></p>
+                        <p><strong>Location:</strong> <?php echo htmlspecialchars($property['location']); ?></p>
+                        <p><strong>Price:</strong> <?php echo htmlspecialchars($property['price']); ?> NPR</p>
+                        <p><strong>Status:</strong> <?php echo htmlspecialchars($property['status']); ?></p>
+                    </div>
+                    <div class="property-actions">
+                        <a href="house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
+                        <a href="update_house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">Update</a>
+                        <a href="delete_property.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
+                    </div>
                 </div>
-                <div class="property-actions">
-                    <a href="house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
-                    <a href="update_house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">Update</a>
-                    <a href="delete_property.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No house properties found.</p>
-    <?php endif; ?>
-</div>
-
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No house properties found.</p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>

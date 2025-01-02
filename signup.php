@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
     $password = $_POST['password'];
-    $role = $_POST['role'];
 
     // Validate inputs
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -32,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "<p>Email already exists!</p>";
         } else {
             // Insert user into the database
-            $sql = "INSERT INTO users (first_name, last_name, email, phone, password, role) 
-                    VALUES (:first_name, :last_name, :email, :phone, :password, :role)";
+            $sql = "INSERT INTO users (first_name, last_name, email, phone, password) 
+                    VALUES (:first_name, :last_name, :email, :phone, :password)";
             $stmt = $conn->prepare($sql);
 
             $data = [
@@ -41,8 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'last_name' => $lastName,
                 'email' => $email,
                 'phone' => $phone,
-                'password' => $hashedPassword,
-                'role' => $role
+                'password' => $hashedPassword
             ];
 
             if ($stmt->execute($data)) {
@@ -57,8 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<p>Database error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
-?>
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -101,8 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         /* Input fields */
-        .form-container input,
-        .form-container select {
+        .form-container input {
             width: 100%;
             padding: 14px 16px;
             margin: 10px 0;
@@ -116,8 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         /* Input field focus */
-        .form-container input:focus,
-        .form-container select:focus {
+        .form-container input:focus {
             outline: none;
             background: rgba(255, 255, 255, 1);
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
@@ -206,8 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" id="signup-password" placeholder="Password" name="password" required>
                 <span class="eye-icon" onclick="togglePasswordVisibility()">&#128065;</span>
             </div>
-            
-            
             
             <button type="submit">Signup</button>
         </form>
