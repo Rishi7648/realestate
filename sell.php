@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="price">Price:</label>
                 <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>
                 
-                <label for="map_image">Upload Map Image:</label>
+                <label for="map_image">Upload Map Image (Naksa):</label>
                 <input type="file" id="map_image" name="map_image" accept="image/*" required>
                 
                 <label for="property_images">Upload Property Images:</label>
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="price">Price:</label>
         <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>
         
-        <label for="map_image">Upload Map Image:</label>
+        <label for="map_image">Upload Map Image (Naksa):</label>
         <input type="file" id="map_image" name="map_image" accept="image/*" required>
         
         <label for="property_images">Upload Property Images:</label>

@@ -312,6 +312,7 @@ if (isset($_POST['approve_property'])) {
                         }
                         ?>
                         <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
+                        <h5>If you want to buy property. You have to contact in this no:9823167724</h5>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
