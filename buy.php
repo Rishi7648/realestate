@@ -86,6 +86,12 @@ if (isset($_POST['approve_property'])) {
         margin-bottom: 20px;
     }
 
+    h5 {
+        font-size: 20px; 
+        color: red;
+        margin-bottom: 20px;
+    }
+
     form {
         margin-bottom: 20px;
         display: flex;
@@ -291,10 +297,12 @@ if (isset($_POST['approve_property'])) {
                     <div class="property">
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                        <p>area: <?= htmlspecialchars($property['area']) ?></p>
                         <h4>House Details:</h4>
                         <ul>
                             <li>Total Floors: <?= htmlspecialchars($property['floors']) ?></li>
                             <li>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></li>
+
                             <li>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></li>
                             <li>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></li>
                             <li>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></li>

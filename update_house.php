@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $price = htmlspecialchars($_POST['price']);
         $floors = htmlspecialchars($_POST['floors']);
         $bedrooms = htmlspecialchars($_POST['bedrooms']);
+        $area = htmlspecialchars($_POST['area']);
         $living_rooms = htmlspecialchars($_POST['living_rooms']);
         $kitchens = htmlspecialchars($_POST['kitchens']);
         $washrooms = htmlspecialchars($_POST['washrooms']);
@@ -56,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Update the database
         $sql = "UPDATE houseproperties 
-                SET location = :location, price = :price, floors = :floors, bedrooms = :bedrooms, 
+                SET location = :location, price = :price, floors = :floors, bedrooms = :bedrooms, area = :area,
                     living_rooms = :living_rooms, kitchens = :kitchens, washrooms = :washrooms, 
                     attached_washrooms = :attached_washrooms, map_image = :map_image, property_images = :property_images 
                 WHERE id = :id";
@@ -66,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->bindValue(':price', $price);
         $stmt->bindValue(':floors', $floors);
         $stmt->bindValue(':bedrooms', $bedrooms);
+        $stmt->bindValue(':area', $area);
         $stmt->bindValue(':living_rooms', $living_rooms);
         $stmt->bindValue(':kitchens', $kitchens);
         $stmt->bindValue(':washrooms', $washrooms);
@@ -154,6 +156,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <label for="price">Price:</label>
         <input type="text" id="price" name="price" value="<?php echo htmlspecialchars($property['price']); ?>" required>
+
+        <label for="area">area:</label>
+        <input type="text" id="area" name="area" value="<?php echo htmlspecialchars($property['area']); ?>" required>
 
         <label for="floors">Total Floors:</label>
         <input type="text" id="floors" name="floors" value="<?php echo htmlspecialchars($property['floors']); ?>" required>

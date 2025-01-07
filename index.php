@@ -89,8 +89,8 @@ body {
                 <li><a href="about.php">About</a></li>
                 <li><a href="buy.php">Buy</a></li>
                 <li><a href="sell.php">Sell</a></li>
-                <li><a href="logout.php" onclick="logout()"> Logout</a></li>
                 <li><a href="my_property.php?id=PROPERTY_ID"> My property</a></li>
+                <li><a href="logout.php" onclick="logout()"> Logout</a></li>
             </ul>
         </div>
     </nav>

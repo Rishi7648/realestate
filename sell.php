@@ -62,6 +62,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 20px;
         }
 
+        h3 {
+            text-align: center;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        
+         h4{
+            text-align: center;
+            color: red;
+            margin-bottom: 20px;
+        }
+
         .btn {
             width: 100%;
             padding: 12px;
@@ -145,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div id="land-form" class="property-section">
             <h2>List Your Land</h2>
+            <h3>please uplaod clear photos</h3>
             <form action="./submit_land.php" method="post" enctype="multipart/form-data">
                 <label for="area">Area of Land:</label>
                 <input type="text" id="area" name="area" placeholder="Enter land area" required>
@@ -170,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div id="house-form" class="property-section">
     <h2>List Your House</h2>
+    <h4>please upload clear and every side of house</h4>
     <form action="./submit_house.php" method="POST" enctype="multipart/form-data">
         <label for="floors">Total Floors:</label>
         <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
@@ -191,6 +206,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <label for="location">Location:</label>
         <input type="text" id="location" name="location" placeholder="Enter location" required>
+
+        <label for="area">Area of house:</label>
+                <input type="text" id="area" name="area" placeholder="Enter house area" required>
         
         <label for="price">Price:</label>
         <input type="text" id="price" name="price" placeholder="Enter price in nepali" required>

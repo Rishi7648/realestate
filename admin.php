@@ -92,7 +92,7 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
             font-size: 1.5em;
         }
         .property img {
-            max-width: 100%;
+            max-width: 600px;
             height: auto;
             border-radius: 5px;
         }
@@ -204,9 +204,11 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
                         <p>Floors: <?= htmlspecialchars($property['floors']) ?></p>
                         <p>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></p>
+                        <p>Area: <?= htmlspecialchars($property['area']) ?></p>
                         <p>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></p>
                         <p>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></p>
                         <p>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></p>
+                        <p>Attached washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?></p
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
                         <p>Status: <?= htmlspecialchars($property['status']) ?></p>
                         <p>Uploaded By: <?= htmlspecialchars($property['first_name']) ?> <?= htmlspecialchars($property['last_name']) ?></p>

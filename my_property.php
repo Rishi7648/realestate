@@ -11,6 +11,13 @@ if (!isset($_SESSION['user_id'])) {
 // Get the logged-in user's ID
 $user_id = $_SESSION['user_id'];
 
+// Fetch user details (such as name)
+$sql = "SELECT * FROM users WHERE id = :user_id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
 // Fetch land properties for the logged-in user
 $sql = "SELECT * FROM land_properties WHERE user_id = :user_id";
 $stmt = $conn->prepare($sql);
@@ -94,9 +101,25 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin-top: 10px;
             border-radius: 5px;
         }
+        .profile {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        .profile h3 {
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
+    <!-- Profile Section -->
+    <div class="profile">
+        <h3>Welcome, <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>!</h3>
+        
+    </div>
+
     <h1>My Properties</h1>
     
     <!-- Land Properties Section -->
@@ -113,7 +136,7 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p><strong>Status:</strong> <?php echo htmlspecialchars($property['status']); ?></p>
                     </div>
                     <div class="property-actions">
-                        <a href="view_property.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
+                        <a href="view_landproperty.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
                         <a href="update_land.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">Update</a>
                         <a href="delete_property.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
                     </div>
@@ -134,6 +157,7 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
                         <p><strong>Floors:</strong> <?php echo htmlspecialchars($property['floors']); ?></p>
                         <p><strong>Bedrooms:</strong> <?php echo htmlspecialchars($property['bedrooms']); ?></p>
+                        <p><strong>Area:</strong> <?php echo htmlspecialchars($property['area']); ?></p>
                         <p><strong>Living Rooms:</strong> <?php echo htmlspecialchars($property['living_rooms']); ?></p>
                         <p><strong>Kitchens:</strong> <?php echo htmlspecialchars($property['kitchens']); ?></p>
                         <p><strong>Washrooms:</strong> <?php echo htmlspecialchars($property['washrooms']); ?></p>
@@ -143,7 +167,7 @@ $house_properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <p><strong>Status:</strong> <?php echo htmlspecialchars($property['status']); ?></p>
                     </div>
                     <div class="property-actions">
-                        <a href="house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
+                        <a href="view_house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">View</a>
                         <a href="update_house.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn">Update</a>
                         <a href="delete_property.php?id=<?php echo htmlspecialchars($property['id']); ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
                     </div>

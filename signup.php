@@ -19,8 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
+    
+
     // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $Password = $password;
 
     try {
         // Check if the email already exists
@@ -40,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'last_name' => $lastName,
                 'email' => $email,
                 'phone' => $phone,
-                'password' => $hashedPassword
+                'password' => $Password
             ];
 
             if ($stmt->execute($data)) {
