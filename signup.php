@@ -19,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    
-
     // Hash the password
     $Password = $password;
 
@@ -71,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin: 0;
             padding: 0;
             height: 100vh;
-            background: purple;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -153,6 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background: linear-gradient(45deg, #2575fc, #6a11cb);
         }
 
+        /* Forgot Password link */
+        .form-container .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+
         /* Signup link */
         .form-container p {
             text-align: center;
@@ -206,6 +210,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit">Signup</button>
         </form>
         <p>Already have an account? <a href="login.php">Login here</a></p>
+        <div class="forgot-password">
+            <a href="forgot-password.php">Forgot Password?</a>
+        </div>
     </div>
 
     <script>

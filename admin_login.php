@@ -43,6 +43,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo "<p>Invalid admin credentials!</p>";
         }
+    } elseif (isset($_POST['reset_password'])) {
+        // Handle password reset request
+        $email = $_POST['email'];
+
+        $sql = "SELECT * FROM admin WHERE email = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($admin) {
+            echo "<p>Password reset link sent to your email.</p>";
+            // Here, you should implement actual email sending with a reset link
+        } else {
+            echo "<p>Email not found!</p>";
+        }
     }
 }
 ?>
@@ -120,12 +135,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             transform: translateY(-50%);
             cursor: pointer;
         }
+        /* Stylish Links for forget password and don't have account? signup and already have an account?login*/
+.toggle-form {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #4e54c8;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.toggle-form:hover {
+    color: #8f94fb;
+    text-shadow: 0 0 10px rgba(79, 92, 238, 0.6);
+}
+
+/* Underline Effect */
+.toggle-form::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4e54c8, #8f94fb);
+    transition: width 0.4s ease-in-out;
+}
+
+.toggle-form:hover::after {
+    width: 100%;
+}
+
+/* Center Alignment */
+p .toggle-form {
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+}
+
     </style>
 </head>
 <body>
 
-
-    <!-- Admin Login & Signup forms -->
+    <!-- Admin Login Form -->
     <div class="form-container" id="login-form">
         <h2>Admin Login</h2>
         <form method="POST">
@@ -137,12 +189,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" name="login">Login as Admin</button>
         </form>
         <p class="toggle-form" onclick="toggleForm('signup-form')">Don't have an account? Signup</p>
+        <p><a href="#" class="toggle-form" onclick="toggleForm('reset-form')">Forgot Password?</a></p>
+      
     </div>
 
+    <!-- Admin Signup Form -->
     <div class="form-container" id="signup-form" style="display: none;">
         <h2>Admin Signup</h2>
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required>
+            <input type="text" name="phone no" placeholder="Phone no" required>
             <input type="email" name="email" placeholder="Admin Email" required>
             <div class="password-container">
                 <input type="password" id="signup-password" name="password" placeholder="Password" required>
@@ -151,8 +207,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" name="signup">Signup as Admin</button>
         </form>
         <p class="toggle-form" onclick="toggleForm('login-form')">Already have an account? Login</p>
+        <p><a href="#" class="toggle-form" onclick="toggleForm('reset-form')">Forgot Password?</a></p>
+       
     </div>
 
+    <!-- Reset Password Form -->
+    <div class="form-container" id="reset-form" style="display: none;">
+        <h2>Reset Password</h2>
+        <form method="POST">
+            <input type="email" name="email" placeholder="Enter your email" required>
+            <button type="submit" name="reset_password">Reset Password</button>
+        </form>
+        <p class="toggle-form" onclick="toggleForm('login-form')">Back to Login</p>
+    </div>
 
 <script>
     function toggleForm(formId) {

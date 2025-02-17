@@ -94,7 +94,7 @@
 <body>
     <div class="about-section">
         <h1>About Us</h1>
-        <p>Welcome to Real Estate Hub, your one-stop destination for buying and selling properties with ease and confidence.</p>
+        <p>Welcome to Real Estate Nepal, your one-stop destination for buying and selling properties with ease and confidence.</p>
     </div>
 
     <div class="content">

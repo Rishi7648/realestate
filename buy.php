@@ -239,10 +239,117 @@ if (isset($_POST['approve_property'])) {
             width: 100%;
         }
     }
+    
+/* Navbar Styling */
+nav {
+    background-color: #007BFF;
+    padding: 10px ;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center;
+    
+}
+
+
+
+/* Navbar Styling */
+nav {
+    background-color: #007BFF;
+    padding:  20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center;
+}
+
+/* Navigation Links */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+}
+
+/* Hide Hamburger Icon on Large Screens */
+.menu-toggle {
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+    display: none;
+    position: absolute; /* To place it relative to the nav */
+    left: 15px; /* Align it to the left side */
+    top: 3px; /* Optional: Add space from the top */
+}
+
+/* Responsive Navigation (For Small Screens) */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Show hamburger menu icon */
+    }
+
+    nav ul {
+        display: none; /* Hide menu by default */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: lightsteelblue;
+        text-align: left;
+    }
+
+    nav ul.active {
+        display: flex; /* Show menu when active */
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+}
+
 </style>
 </head>
 
 <body>
+<nav>
+<div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>  <!-- Hamburger Icon -->
+    <ul>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="buy.php">Buy</a></li>
+        <li><a href="sell.php">Sell</a></li>
+        <li><a href="about.php">About</a></li>
+        <li><a href="contact.php">Contact us</a></li>
+        <li><a href="my_property.php">My Property</a></li>
+        <li><a href="logout.php">Logout</a></li>
+    </ul>
+</nav>
     <div class="container">
         <h1>Buy Properties</h1>
         
@@ -281,7 +388,7 @@ if (isset($_POST['approve_property'])) {
                         }
                         ?>
                         <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
-                        <h5>If you want to buy property. You have to contact in this no:9823167724</h5>
+                        <h5>If you want to buy this property. You have to contact in this no:9823167724</h5>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -320,7 +427,7 @@ if (isset($_POST['approve_property'])) {
                         }
                         ?>
                         <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
-                        <h5>If you want to buy property. You have to contact in this no:9823167724</h5>
+                        <h5>If you want to buy this property. You have to contact in this no:9823167724</h5>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -330,7 +437,7 @@ if (isset($_POST['approve_property'])) {
     </div>
 
     <footer>
-        <p>Company Details | Contact: +977 123456789 | Email: info@example.com | Location: Kathmandu, Nepal</p>
+        <p>Company Details | Contact: 9823167724 | Email: contact@realestate.com  | Location: Thamel, Kathmandu</p>
     </footer>
 
     <script>
@@ -353,6 +460,10 @@ if (isset($_POST['approve_property'])) {
                 landButton.classList.remove('active');
             }
         }
+        function toggleMenu() {
+    const navMenu = document.querySelector("nav ul");
+    navMenu.classList.toggle("active");
+}
 
         // Initialize the first tab
         toggleTab('land');

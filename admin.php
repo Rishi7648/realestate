@@ -168,6 +168,7 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
             <?php if (!empty($land_properties)): ?>
                 <?php foreach ($land_properties as $property): ?>
                     <div class="property">
+                    <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
                         <p>Area: <?= htmlspecialchars($property['area']) ?></p>
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
@@ -201,6 +202,7 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
             <?php if (!empty($house_properties)): ?>
                 <?php foreach ($house_properties as $property): ?>
                     <div class="property">
+                    <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
                         <p>Floors: <?= htmlspecialchars($property['floors']) ?></p>
                         <p>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></p>

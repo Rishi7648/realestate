@@ -2,7 +2,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: url('bg.png') no-repeat center center fixed;
+    background: url('photo.png.jpg') no-repeat center center fixed;
     background-size: cover;
     color:white;
 }
@@ -16,7 +16,7 @@ body {
     background-color: (0, 0, 0, 0.6);
     position: relative;
 }
-
+ /*  */
 
 
 
@@ -66,7 +66,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="tel
         position: absolute;
         top: 60px; /* Adjust based on navbar height */
         right: 30;
-        background:rgba(0, 0, 0, 0.6);
+        background:blue;
         width: 100%;
     
     } 

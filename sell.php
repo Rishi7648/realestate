@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff; /* Set background to white */
+            background-color: white; /* Set background to white */
             margin: 0;
             padding: 0;
             display: flex;
@@ -146,9 +146,134 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-actions .submit-btn:hover {
             background-color: #218838;
         }
+
+        /* Footer Styles */
+    footer {
+        background-color: #333;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+
+    footer p {
+        margin: 0;
+    }
+       
+/* Navbar Styling */
+nav {
+    background-color: #007BFF;
+    padding: 10px ;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center;
+    
+}
+
+
+
+/* Navbar Styling */
+nav {
+    background-color: #007BFF;
+    padding:  20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center;
+}
+
+/* Navigation Links */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+}
+
+/* Hide Hamburger Icon on Large Screens */
+.menu-toggle {
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+    display: none;
+    position: absolute; /* To place it relative to the nav */
+    left: 15px; /* Align it to the left side */
+    top: 3px; /* Optional: Add space from the top */
+}
+
+/* Responsive Navigation (For Small Screens) */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Show hamburger menu icon */
+    }
+
+    nav ul {
+        display: none; /* Hide menu by default */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: lightsteelblue;
+        text-align: left;
+    }
+
+    nav ul.active {
+        display: flex; /* Show menu when active */
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+}
+
+
+
     </style>
 </head>
 <body>
+<nav>
+<div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>  <!-- Hamburger Icon -->
+    <ul>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="buy.php">Buy</a></li>
+        <li><a href="sell.php">Sell</a></li>
+        <li><a href="about.php">About</a></li>
+        <li><a href="contact.php">Contact us</a></li>
+        <li><a href="my_property.php">My Property</a></li>
+        <li><a href="logout.php">Logout</a></li>
+    </ul>
+</nav>
     <div class="container">
         <h1>Seller Panel</h1>
         <div id="property-selection">
@@ -187,22 +312,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h4>please upload clear and every side of house</h4>
     <form action="./submit_house.php" method="POST" enctype="multipart/form-data">
         <label for="floors">Total Floors:</label>
-        <input type="number" id="floors" name="floors" placeholder="Enter total floors" required>
+        <input type="text" id="floors" name="floors" placeholder="Enter total floors" required>
         
         <label for="bedrooms">Bedrooms:</label>
-        <input type="number" id="bedrooms" name="bedrooms" placeholder="Enter number of bedrooms" required>
+        <input type="text" id="bedrooms" name="bedrooms" placeholder="Enter number of bedrooms" required>
         
         <label for="living_rooms">Living Rooms:</label>
-        <input type="number" id="living_rooms" name="living_rooms" placeholder="Enter number of living rooms" required>
+        <input type="text" id="living_rooms" name="living_rooms" placeholder="Enter number of living rooms" required>
         
         <label for="kitchens">Kitchens:</label>
-        <input type="number" id="kitchens" name="kitchens" placeholder="Enter number of kitchens" required>
+        <input type="text" id="kitchens" name="kitchens" placeholder="Enter number of kitchens" required>
         
         <label for="washrooms">Washrooms:</label>
-        <input type="number" id="washrooms" name="washrooms" placeholder="Enter number of washrooms" required>
+        <input type="text" id="washrooms" name="washrooms" placeholder="Enter number of washrooms" required>
         
         <label for="attached_washrooms">Attached Washrooms:</label>
-        <input type="number" id="attached_washrooms" name="attached_washrooms" placeholder="Enter number of attached washrooms" required>
+        <input type="text" id="attached_washrooms" name="attached_washrooms" placeholder="Enter number of attached washrooms" required>
         
         <label for="location">Location:</label>
         <input type="text" id="location" name="location" placeholder="Enter location" required>
@@ -227,6 +352,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
     </div>
+    <footer>
+        <p>Company Details | Contact: 9823167724 | Email: contact@realestate.com  | Location: Thamel, Kathmandu</p>
+    </footer>
 
     <script>
         // Form visibility management
@@ -249,6 +377,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             houseForm.style.display = 'none';
             propertySelection.style.display = 'block';
         }
+        function toggleMenu() {
+    const navMenu = document.querySelector("nav ul");
+    navMenu.classList.toggle("active");
+}
+
     </script>
 </body>
 </html>

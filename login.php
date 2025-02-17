@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         /* Global Styles */
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background: white;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -46,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         /* Container */
         .form-container {
-            background: #fff;
+            background: white;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -131,6 +130,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: #feb47b;
         }
 
+        /* Forgot Password Button */
+        .forgot-password {
+            font-size: 14px;
+            color: blue;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #feb47b;
+        }
+
         /* Animation */
         .form-container {
             animation: slide-in 0.8s ease-out;
@@ -162,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit">Login</button>
             
             <p>Don't have an account? <a href="signup.php">Sign up</a></p>
+            <a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
         </form>
     </div>
 
