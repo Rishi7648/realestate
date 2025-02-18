@@ -16,7 +16,7 @@ session_start(); // Start the session to access session variables
             background: url('photo.png.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
-            height: 100vh;
+            height: 300vh;
             overflow-y: auto; /* Allow scrolling */
         }
 
@@ -39,6 +39,7 @@ session_start(); // Start the session to access session variables
             text-transform: uppercase;
             position: absolute;
             left: 1rem; /* Align the logo to the left */
+            
         }
 
         /* Nav Links */
@@ -47,7 +48,7 @@ session_start(); // Start the session to access session variables
             display: flex;
             gap: 1.5rem;
             margin: 0;
-            padding: 0;
+            padding: 20;
         }
 
         .nav-links li {
@@ -66,7 +67,7 @@ session_start(); // Start the session to access session variables
         .nav-links a:hover {
             background-color: #ffda79;
             color: #333;
-            border-radius: 5px;
+            border-radius: 30px;
         }
 
         /* Hamburger Menu (Hidden by Default) */
@@ -84,8 +85,8 @@ session_start(); // Start the session to access session variables
             .hamburger {
                 display: block;
                 position: absolute;
-                right: 20px;
-                top: 15px;
+                right: 25px;
+                top: -5px;
             }
 
             .nav-links {
@@ -106,7 +107,7 @@ session_start(); // Start the session to access session variables
 
             .nav-links li {
                 width: 100%;
-                padding: 10px;
+                padding: 0px;
             }
 
             .nav-links a {
@@ -116,22 +117,51 @@ session_start(); // Start the session to access session variables
                 font-size: 1.2em;
             }
         }
+/* Ensure full height for scrolling */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto; /* Allow vertical scrolling */
+    display: flex;
+    flex-direction: column;
+}
 
-        /* Footer Styles */
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-        }
+/* Main Content Section */
+main {
+    flex: 1; /* Allows content to expand */
+    overflow-y: auto; /* Enables scrolling */
+    padding-bottom: 50px; /* Prevents overlap with footer */
+}
 
-        footer p {
-            margin: 0;
-        }
+/* Home Page Content */
+.content {
+    min-height: 100vh; /* Ensures enough space for scrolling */
+    padding: 20px;
+}
+
+/* Scrollable Footer */
+.footer {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+/* Fix Background Image */
+body {
+    background: url('photo.png.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed; /* Keeps background fixed while scrolling */
+    color: white;
+}
+
+
+
+        
     </style>
 </head>
 <body>
