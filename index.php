@@ -25,7 +25,7 @@ session_start(); // Start the session to access session variables
             display: flex;
             justify-content: center; /* Center the nav links */
             align-items: center;
-            padding: 1rem;
+            padding: 2rem;
             background-color: black;
             position: relative;
             width: 100%;
@@ -60,7 +60,7 @@ session_start(); // Start the session to access session variables
             text-decoration: none;
             font-size: 1em;
             font-weight: 500;
-            padding: 5px 10px;
+            padding: px 10px;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -98,7 +98,7 @@ session_start(); // Start the session to access session variables
                 left: 0;
                 background-color: rgba(0, 0, 0, 0.8);
                 text-align: left;
-                padding: 0px;
+                padding: 10px;
             }
 
             .nav-links.active {
@@ -114,51 +114,76 @@ session_start(); // Start the session to access session variables
                 display: block;
                 width: 100%;
                 padding: 10px;
-                font-size: 1.2em;
+                font-size: 1.1em;
             }
         }
-/* Ensure full height for scrolling */
-html, body {
-    height: 100%;
+
+        /* Reset default margin & padding */
+        /* making background scrollable  and footer last of home page */
+* {
     margin: 0;
     padding: 0;
-    overflow-y: auto; /* Allow vertical scrolling */
+    box-sizing: border-box;
+}
+
+/* Make sure body takes up full height */
+body {
     display: flex;
     flex-direction: column;
+    min-height: 100vh; /* Full viewport height */
 }
 
-/* Main Content Section */
-main {
-    flex: 1; /* Allows content to expand */
-    overflow-y: auto; /* Enables scrolling */
-    padding-bottom: 50px; /* Prevents overlap with footer */
+/* Fixed navbar */
+.navbar {
+    background-color: black;
+    color: gold;
+    padding: 15px;
+    text-align: left;
+    font-size: 20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
-/* Home Page Content */
+.navbar nav {
+    text-align: right;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+/* Background image section */
+.main-content {
+    background: url('photo.png.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100vh; /* Full screen height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Extra content to allow scrolling */
 .content {
-    min-height: 100vh; /* Ensures enough space for scrolling */
+    min-height: 60vh; /* Ensures enough scrolling */
     padding: 20px;
+    text-align: center;
 }
 
-/* Scrollable Footer */
+/* Footer at the bottom after scrolling */
 .footer {
     background-color: black;
     color: white;
     text-align: center;
     padding: 1rem;
     width: 100%;
-    position: relative;
-    bottom: 0;
+    margin-top: auto; /* Pushes footer below content */
 }
-
-/* Fix Background Image */
-body {
-    background: url('photo.png.jpg') no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed; /* Keeps background fixed while scrolling */
-    color: white;
-}
-
 
 
         
