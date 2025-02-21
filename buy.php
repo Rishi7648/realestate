@@ -257,45 +257,43 @@ if (isset($_POST['approve_property'])) {
     }
     
     /* Navbar Styling */
-    nav {
-        background-color: #007BFF;
-        padding: 10px ;
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        display: flex;
-        justify-content: space-between;
-        justify-content: center; /* Center all content horizontally */
-        align-items: center;
-    }
+nav {
+    background-color: #007BFF;
+    padding:  20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center;
+}
 
-    /* Navigation Links */
-    nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-    }
+/* Navigation Links */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
 
-    nav ul li {
-        margin: 0 15px;
-    }
+nav ul li {
+    margin: 0 15px;
+}
 
-    nav ul li a {
-        text-decoration: none;
-        color: black;
-        font-size: 18px;
-        padding: 10px 15px;
-        transition: 0.3s;
-    }
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
 
-    nav ul li a:hover {
-        background-color: #0056b3;
-        border-radius: 5px;
-    }
-
+nav ul li a:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+}
     /* Hide Hamburger Icon on Large Screens */
 .menu-toggle {
     font-size: 30px;

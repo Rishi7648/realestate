@@ -298,8 +298,8 @@ nav ul li a:hover {
                 <input type="file" id="map_image" name="map_image" accept="image/*" required>
                 
                 <label for="property_images">Upload Property Images:</label>
-                <input type="file" id="property_images" name="property_images[]" multiple accept="image/*">
-                
+        <input type="file" id="property_images" name="property_images[]" multiple accept="image/*" required>
+        
                 <div class="form-actions">
                     <button type="button" class="cancel-btn" onclick="resetForms()">Cancel</button>
                     <button type="submit" class="submit-btn">Submit</button>
@@ -341,8 +341,8 @@ nav ul li a:hover {
         <label for="map_image">Upload Map Image (Naksa):</label>
         <input type="file" id="map_image" name="map_image" accept="image/*" required>
         
-        <label for="property_images">Upload Property Images:</label>
-        <input type="file" id="property_images" name="property_images[]" multiple accept="image/*">
+       <label for="property_images">Upload Property Images:</label>
+        <input type="file" id="property_images" name="property_images[]" multiple accept="image/*" required>
         
         <div class="form-actions">
             <button type="button" class="cancel-btn" onclick="resetForms()">Cancel</button>

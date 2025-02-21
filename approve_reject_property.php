@@ -50,24 +50,24 @@ if (isset($data['property_id'], $data['property_type'], $data['action'])) {
                 echo "Property status updated to approved.";
             }
         } else {
-            // If rejected, delete the property
-            if ($property_type == 'land') {
-                $sql = "DELETE FROM land_properties WHERE id = :property_id";
-            } elseif ($property_type == 'house') {
-                $sql = "DELETE FROM houseproperties WHERE id = :property_id";
-            }
-
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':property_id', $property_id);
-
-            // Debugging: Check if the query was executed successfully
-            if (!$stmt->execute()) {
-                print_r($stmt->errorInfo()); // Output errors if any
-                echo "Failed to delete property.";
-            } else {
-                echo "Property rejected and deleted.";
-            }
+           // If rejected, update the property status to 'rejected'
+           if ($property_type == 'land') {
+            $sql = "UPDATE land_properties SET status = 'rejected' WHERE id = :property_id";
+        } elseif ($property_type == 'house') {
+            $sql = "UPDATE houseproperties SET status = 'rejected' WHERE id = :property_id";
         }
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':property_id', $property_id);
+
+        // Debugging: Check if the query was executed successfully
+        if (!$stmt->execute()) {
+            print_r($stmt->errorInfo()); // Output errors if any
+            echo "Failed to update property status.";
+        } else {
+            echo "Property status updated to rejected.";
+        }
+    }
     } catch (PDOException $e) {
         // Handle any errors during the database operation
         echo "Error: " . $e->getMessage();

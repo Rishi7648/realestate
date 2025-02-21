@@ -11,22 +11,22 @@ if (!isset($_SESSION['admin_id'])) {
 // Fetch search keyword if provided
 $search_keyword = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Fetch all land properties with user details, filtered by search keyword
+// Fetch all land properties with user details, filtered by search keyword and excluding rejected properties
 $sql_land = "SELECT lp.*, u.first_name, u.last_name, u.phone, u.email, lp.map_image, lp.status 
              FROM land_properties lp
              JOIN users u ON lp.user_id = u.id
-             WHERE lp.location LIKE :keyword
+             WHERE lp.location LIKE :keyword AND lp.status != 'rejected'
              ORDER BY lp.created_at DESC"; // Sorting by creation date (latest first)
 $stmt_land = $conn->prepare($sql_land);
 $stmt_land->bindValue(':keyword', '%' . $search_keyword . '%', PDO::PARAM_STR);
 $stmt_land->execute();
 $land_properties = $stmt_land->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch all house properties with user details, filtered by search keyword
+// Fetch all house properties with user details, filtered by search keyword and excluding rejected properties
 $sql_house = "SELECT hp.*, u.first_name, u.last_name, u.phone, u.email, hp.map_image, hp.status
               FROM houseproperties hp
               JOIN users u ON hp.user_id = u.id
-              WHERE hp.location LIKE :keyword
+              WHERE hp.location LIKE :keyword AND hp.status != 'rejected'
               ORDER BY hp.created_at DESC"; // Sorting by creation date (latest first)
 $stmt_house = $conn->prepare($sql_house);
 $stmt_house->bindValue(':keyword', '%' . $search_keyword . '%', PDO::PARAM_STR);
@@ -264,7 +264,7 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     
-       <script>
+    <script>
     // Function to show property options (search bar, view land, view house buttons)
     function showPropertyOptions() {
         document.getElementById('viewPropertyBtn').classList.add('hidden');
@@ -274,53 +274,51 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Toggle tab for land and house properties
-function toggleTab(tab) {
-    const landTab = document.querySelector('.property-list.land');
-    const houseTab = document.querySelector('.property-list.house');
-    const landBtn = document.getElementById('viewLandBtn');
-    const houseBtn = document.getElementById('viewHouseBtn');
+    function toggleTab(tab) {
+        const landTab = document.querySelector('.property-list.land');
+        const houseTab = document.querySelector('.property-list.house');
+        const landBtn = document.getElementById('viewLandBtn');
+        const houseBtn = document.getElementById('viewHouseBtn');
 
-    if (tab === 'land') {
-        landTab.classList.add('active'); // Show land properties
-        houseTab.classList.remove('active'); // Hide house properties
-        landBtn.classList.add('active'); // Activate land button
-        houseBtn.classList.remove('active'); // Deactivate house button
-    } else if (tab === 'house') {
-        landTab.classList.remove('active'); // Hide land properties
-        houseTab.classList.add('active'); // Show house properties
-        landBtn.classList.remove('active'); // Deactivate land button
-        houseBtn.classList.add('active'); // Activate house button
+        if (tab === 'land') {
+            landTab.classList.add('active'); // Show land properties
+            houseTab.classList.remove('active'); // Hide house properties
+            landBtn.classList.add('active'); // Activate land button
+            houseBtn.classList.remove('active'); // Deactivate house button
+        } else if (tab === 'house') {
+            landTab.classList.remove('active'); // Hide land properties
+            houseTab.classList.add('active'); // Show house properties
+            landBtn.classList.remove('active'); // Deactivate land button
+            houseBtn.classList.add('active'); // Activate house button
+        }
     }
-}
 
-function handleAction(propertyId, propertyType, action) {
-    // Prepare the data to send
-    const data = {
-        property_id: propertyId,
-        property_type: propertyType,
-        action: action
-    };
+    function handleAction(propertyId, propertyType, action) {
+        // Prepare the data to send
+        const data = {
+            property_id: propertyId,
+            property_type: propertyType,
+            action: action
+        };
 
-    // Send the data to the server using fetch
-    fetch('approve_reject.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.text()) // Parse the response as text
-    .then(result => {
-        alert(result); // Show the result to the admin
-        location.reload(); // Reload the page to reflect the updated status
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while updating the status.');
-    });
-}
-        
-        
+        // Send the data to the server using fetch
+        fetch('approve_reject_property.php', { // Updated file path
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.text()) // Parse the response as text
+        .then(result => {
+            alert(result); // Show the result to the admin
+            location.reload(); // Reload the page to reflect the updated status
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the status.');
+        });
+    }
     </script>
 </body>
 </html>

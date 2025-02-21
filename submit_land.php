@@ -43,17 +43,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     $user_id = $_SESSION['user_id']; // Get the logged-in user's ID
 
-    // Prepare SQL statement
-    $sql = "INSERT INTO land_properties (area, location, price, map_image, property_images, user_id) 
-            VALUES (:area, :location, :price, :map_image, :property_images, :user_id)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':area', $area);
-    $stmt->bindParam(':location', $location);
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':map_image', $map_image_path);
-    $stmt->bindParam(':property_images', $property_images_json);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-
+   // Prepare SQL statement
+   $sql = "INSERT INTO land_properties (area, location, price, map_image, property_images, user_id,status) 
+   VALUES (:area, :location, :price, :map_image, :property_images, :user_id,'pending')";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':area', $area);
+$stmt->bindParam(':location', $location);
+$stmt->bindParam(':price', $price);
+$stmt->bindParam(':map_image', $map_image_path);
+$stmt->bindParam(':property_images', $property_images_json);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     // Execute query
     if ($stmt->execute()) {
         echo "Land property listed successfully!";
