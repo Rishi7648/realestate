@@ -5,7 +5,10 @@ session_start();
 session_unset(); // Unsets all session variables
 session_destroy(); // Destroys the session
 
-// Redirect to the login page (or any page you'd like after logout)
-header("Location: admin_login.php"); // Replace 'login.php' with the actual login page
+// Set a session variable to display a logout message
+$_SESSION['logout_message'] = "You have been logged out.";
+
+// Redirect to the login page with a slight delay
+header("Location: admin_logout_redirect.php"); // Redirects to a new file that will show the message
 exit();
 ?>

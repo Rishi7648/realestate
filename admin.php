@@ -140,16 +140,42 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
                 flex-direction: column;
             }
         }
+        .fixed-buttons {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .view-property-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        
     </style>
 </head>
 <body>
+    
     <button class="logout-btn" onclick="window.location.href='admin_logout.php'">Logout</button>
 
     <div class="container">
         <h1>Admin Panel</h1>
 
+        <!-- View Property Button -->
+        <button class="view-property-btn" id="viewPropertyBtn" onclick="showPropertyOptions()">View Property</button>
+
         <!-- Search Bar -->
-        <div class="search-bar" style="margin-bottom: 20px;">
+        <div class="search-bar hidden" id="searchBar" style="margin-bottom: 20px;">
             <form method="GET" action="">
                 <input type="text" name="search" value="<?= htmlspecialchars($search_keyword) ?>" placeholder="Search by location">
                 <button type="submit">Search</button>
@@ -157,18 +183,18 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Tab buttons for toggling between house and land properties -->
-        <div class="tab-btns">
+        <div class="tab-btns hidden" id="tabBtns">
             <button class="tab-btn active" id="viewLandBtn" onclick="toggleTab('land')">View Land</button>
             <button class="tab-btn" id="viewHouseBtn" onclick="toggleTab('house')">View House</button>
         </div>
 
         <!-- Land Properties -->
-        <div class="property-list land active">
+        <div class="property-list land hidden">
             <h2>Land Properties</h2>
             <?php if (!empty($land_properties)): ?>
                 <?php foreach ($land_properties as $property): ?>
                     <div class="property">
-                    <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
+                        <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
                         <p>Area: <?= htmlspecialchars($property['area']) ?></p>
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
@@ -197,12 +223,12 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- House Properties -->
-        <div class="property-list house">
+        <div class="property-list house hidden">
             <h2>House Properties</h2>
             <?php if (!empty($house_properties)): ?>
                 <?php foreach ($house_properties as $property): ?>
                     <div class="property">
-                    <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
+                        <p><strong>ID:</strong> <?php echo htmlspecialchars($property['id']); ?></p>
                         <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
                         <p>Floors: <?= htmlspecialchars($property['floors']) ?></p>
                         <p>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></p>
@@ -210,7 +236,7 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
                         <p>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></p>
                         <p>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></p>
                         <p>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></p>
-                        <p>Attached washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?></p
+                        <p>Attached washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?></p>
                         <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
                         <p>Status: <?= htmlspecialchars($property['status']) ?></p>
                         <p>Uploaded By: <?= htmlspecialchars($property['first_name']) ?> <?= htmlspecialchars($property['last_name']) ?></p>
@@ -237,40 +263,64 @@ $house_properties = $stmt_house->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <script>
-        // Toggle tab for land and house properties
-        function toggleTab(tab) {
-            const landTab = document.querySelector('.land');
-            const houseTab = document.querySelector('.house');
-            const landBtn = document.getElementById('viewLandBtn');
-            const houseBtn = document.getElementById('viewHouseBtn');
+    
+       <script>
+    // Function to show property options (search bar, view land, view house buttons)
+    function showPropertyOptions() {
+        document.getElementById('viewPropertyBtn').classList.add('hidden');
+        document.getElementById('searchBar').classList.remove('hidden');
+        document.getElementById('tabBtns').classList.remove('hidden');
+        document.querySelector('.property-list.land').classList.remove('hidden'); // Show land properties by default
+    }
 
-            if (tab === 'land') {
-                landTab.classList.add('active');
-                houseTab.classList.remove('active');
-                landBtn.classList.add('active');
-                houseBtn.classList.remove('active');
-            } else {
-                landTab.classList.remove('active');
-                houseTab.classList.add('active');
-                landBtn.classList.remove('active');
-                houseBtn.classList.add('active');
-            }
-        }
+    // Toggle tab for land and house properties
+function toggleTab(tab) {
+    const landTab = document.querySelector('.property-list.land');
+    const houseTab = document.querySelector('.property-list.house');
+    const landBtn = document.getElementById('viewLandBtn');
+    const houseBtn = document.getElementById('viewHouseBtn');
 
-        // Handle approve/reject action
-        function handleAction(propertyId, propertyType, action) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "approve_reject_property.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert("Property status updated!");
-                    location.reload();
-                }
-            };
-            xhr.send("property_id=" + propertyId + "&property_type=" + propertyType + "&action=" + action);
-        }
+    if (tab === 'land') {
+        landTab.classList.add('active'); // Show land properties
+        houseTab.classList.remove('active'); // Hide house properties
+        landBtn.classList.add('active'); // Activate land button
+        houseBtn.classList.remove('active'); // Deactivate house button
+    } else if (tab === 'house') {
+        landTab.classList.remove('active'); // Hide land properties
+        houseTab.classList.add('active'); // Show house properties
+        landBtn.classList.remove('active'); // Deactivate land button
+        houseBtn.classList.add('active'); // Activate house button
+    }
+}
+
+function handleAction(propertyId, propertyType, action) {
+    // Prepare the data to send
+    const data = {
+        property_id: propertyId,
+        property_type: propertyType,
+        action: action
+    };
+
+    // Send the data to the server using fetch
+    fetch('approve_reject.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.text()) // Parse the response as text
+    .then(result => {
+        alert(result); // Show the result to the admin
+        location.reload(); // Reload the page to reflect the updated status
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the status.');
+    });
+}
+        
+        
     </script>
 </body>
 </html>

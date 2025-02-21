@@ -131,33 +131,49 @@ if (isset($_POST['approve_property'])) {
     }
 
     .viewland, .viewhouse {
-        padding: 12px 25px;
-        font-size: 1.1rem;
-        background-color: #3498db; /* Blue shade */
-        color: white;
-        border: none;
-        border-radius: 30px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 10px; /* Add spacing between buttons */
+}
 
-    .view-buttons button:hover {
-        background-color: #2980b9; /* Darker blue shade */
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-        transform: translateY(-3px);
-    }
+.viewland {
+    background-color: #3498db; /* Blue for View Land */
+}
 
-    .view-buttons button:focus {
-        outline: none;
-        background-color: #1e6f9f; /* Even darker blue */
-    }
+.viewhouse {
+    background-color: #e67e22; /* Orange for View House */
+}
 
-    .view-buttons button.active {
-        background-color: #2ecc71; /* Green for active */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        color: #fff;
-    }
+.viewland:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+.viewhouse:hover {
+    background-color: #d35400; /* Darker orange on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+.viewland:active, .viewhouse:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.viewland.active, .viewhouse.active {
+    background-color: #2ecc71; /* Green for active state */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
 
     .tab-content {
         display: none;
@@ -240,64 +256,47 @@ if (isset($_POST['approve_property'])) {
         }
     }
     
-/* Navbar Styling */
-nav {
-    background-color: #007BFF;
-    padding: 10px ;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    justify-content: center; /* Center all content horizontally */
-    align-items: center;
-    
-}
+    /* Navbar Styling */
+    nav {
+        background-color: #007BFF;
+        padding: 10px ;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        justify-content: center; /* Center all content horizontally */
+        align-items: center;
+    }
 
+    /* Navigation Links */
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+    }
 
+    nav ul li {
+        margin: 0 15px;
+    }
 
-/* Navbar Styling */
-nav {
-    background-color: #007BFF;
-    padding:  20px;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: center; /* Center all content horizontally */
-    align-items: center;
-}
+    nav ul li a {
+        text-decoration: none;
+        color: black;
+        font-size: 18px;
+        padding: 10px 15px;
+        transition: 0.3s;
+    }
 
-/* Navigation Links */
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
+    nav ul li a:hover {
+        background-color: #0056b3;
+        border-radius: 5px;
+    }
 
-nav ul li {
-    margin: 0 15px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: black;
-    font-size: 18px;
-    padding: 10px 15px;
-    transition: 0.3s;
-}
-
-nav ul li a:hover {
-    background-color: #0056b3;
-    border-radius: 5px;
-}
-
-/* Hide Hamburger Icon on Large Screens */
+    /* Hide Hamburger Icon on Large Screens */
 .menu-toggle {
     font-size: 30px;
     color: black;
@@ -334,12 +333,42 @@ nav ul li a:hover {
     }
 }
 
-</style>
+    /* Add this CSS to hide elements initially */
+    .hidden {
+        display: none;
+    }
+    /* buy property butoon style */
+    #buyPropertiesButton {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background-color: #2ecc71; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#buyPropertiesButton:hover {
+    background-color: #27ae60; /* Darker green on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+#buyPropertiesButton:active {
+    background-color: #229954; /* Even darker green on click */
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+    </style>
 </head>
 
 <body>
 <nav>
-<div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>  <!-- Hamburger Icon -->
+    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>  <!-- Hamburger Icon -->
     <ul>
         <li><a href="index.php">Home</a></li>
         <li><a href="buy.php">Buy</a></li>
@@ -350,123 +379,138 @@ nav ul li a:hover {
         <li><a href="logout.php">Logout</a></li>
     </ul>
 </nav>
-    <div class="container">
-        <h1>Buy Properties</h1>
-        
-        <!-- Search Form -->
-        <form method="GET" action="" style="text-align: center; margin-bottom: 20px;">
-            <input type="text" name="search_location" placeholder="Search by location" 
-                   value="<?= htmlspecialchars($search_location) ?>" 
-                   style="padding: 10px; font-size: 1em; width: 60%; border: 1px solid #ccc; border-radius: 5px;">
-            <button type="submit" style="padding: 10px 20px; font-size: 1.1em;">Search</button>
-        </form>
-
-        <!-- Buttons for viewing Land and House properties -->
-        <div style="text-align: center;">
-            <button id="viewLand" class="viewland" onclick="toggleTab('land')">View Land</button>
-            <button id="viewHouse" class="viewhouse" onclick="toggleTab('house')">View House</button>
-        </div>
-
-        <!-- Display Land Properties -->
-        <div id="landProperties" class="tab-content">
-            <h2>Land Properties</h2>
-            <?php if (!empty($land_properties)): ?>
-                <?php foreach ($land_properties as $property): ?>
-                    <div class="property">
-                        <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
-                        <p>Area: <?= htmlspecialchars($property['area']) ?> </p>
-                        <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
-                        <h4>Map:</h4>
-                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
-                        <h4>Images:</h4>
-                        <?php
-                        $images = json_decode($property['property_images'], true);
-                        if ($images) {
-                            foreach ($images as $image) {
-                                echo '<img src="' . htmlspecialchars($image) . '" alt="Property Image" style="max-width: 600px; margin-right: 10px;">';
-                            }
-                        }
-                        ?>
-                        <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
-                        <h5>If you want to buy this property. You have to contact in this no:9823167724</h5>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No land properties available.</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Display House Properties -->
-        <div id="houseProperties" class="tab-content">
-            <h2>House Properties</h2>
-            <?php if (!empty($house_properties)): ?>
-                <?php foreach ($house_properties as $property): ?>
-                    <div class="property">
-                        <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
-                        <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
-                        <p>area: <?= htmlspecialchars($property['area']) ?></p>
-                        <h4>House Details:</h4>
-                        <ul>
-                            <li>Total Floors: <?= htmlspecialchars($property['floors']) ?></li>
-                            <li>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></li>
-
-                            <li>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></li>
-                            <li>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></li>
-                            <li>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></li>
-                            <li>Attached Washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?></li>
-                        </ul>
-                        <h4>Map:</h4>
-                        <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
-                        <h4>Images:</h4>
-                        <?php
-                        $images = json_decode($property['property_images'], true);
-                        if ($images) {
-                            foreach ($images as $image) {
-                                echo '<img src="' . htmlspecialchars($image) . '" alt="Property Image" style="max-width: 600px; margin-right: 10px;">';
-                            }
-                        }
-                        ?>
-                        <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
-                        <h5>If you want to buy this property. You have to contact in this no:9823167724</h5>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No house properties available.</p>
-            <?php endif; ?>
-        </div>
+<div class="container">
+    <h1>Buy Properties</h1>
+    
+    <!-- Buy Properties Button -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button id="buyPropertiesButton" onclick="showProperties()">Buy Properties</button>
     </div>
 
-    <footer>
-        <p>Company Details | Contact: 9823167724 | Email: contact@realestate.com  | Location: Thamel, Kathmandu</p>
-    </footer>
+    <!-- Search Form -->
+    <form method="GET" action="" style="text-align: center; margin-bottom: 20px;" class="hidden" id="searchForm">
+        <input type="text" name="search_location" placeholder="Search by location" 
+               value="<?= htmlspecialchars($search_location) ?>" 
+               style="padding: 10px; font-size: 1em; width: 60%; border: 1px solid #ccc; border-radius: 5px;">
+        <button type="submit" style="padding: 10px 20px; font-size: 1.1em;">Search</button>
+    </form>
 
-    <script>
-        // JavaScript to toggle between the tabs for Land and House properties
-        function toggleTab(tab) {
-            var landTab = document.getElementById('landProperties');
-            var houseTab = document.getElementById('houseProperties');
-            var landButton = document.getElementById('viewLand');
-            var houseButton = document.getElementById('viewHouse');
+    <!-- Buttons for viewing Land and House properties -->
+    <div style="text-align: center;" class="hidden" id="viewButtons">
+        <button id="viewLand" class="viewland" onclick="toggleTab('land')">View Land</button>
+        <button id="viewHouse" class="viewhouse" onclick="toggleTab('house')">View House</button>
+    </div>
 
-            if (tab === 'land') {
-                landTab.classList.add('active-tab');
-                houseTab.classList.remove('active-tab');
-                landButton.classList.add('active');
-                houseButton.classList.remove('active');
-            } else {
-                houseTab.classList.add('active-tab');
-                landTab.classList.remove('active-tab');
-                houseButton.classList.add('active');
-                landButton.classList.remove('active');
-            }
+    <!-- Display Land Properties -->
+    <div id="landProperties" class="tab-content hidden">
+        <h2>Land Properties</h2>
+        <?php if (!empty($land_properties)): ?>
+            <?php foreach ($land_properties as $property): ?>
+                <div class="property">
+                    <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
+                    <p>Area: <?= htmlspecialchars($property['area']) ?> </p>
+                    <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                    <h4>Map:</h4>
+                    <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
+                    <h4>Images:</h4>
+                    <?php
+                    $images = json_decode($property['property_images'], true);
+                    if ($images) {
+                        foreach ($images as $image) {
+                            echo '<img src="' . htmlspecialchars($image) . '" alt="Property Image" style="max-width: 600px; margin-right: 10px;">';
+                        }
+                    }
+                    ?>
+                    <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
+                    <h5>If you want to buy this property. You have to contact in this no:9823167724</h5>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No land properties available.</p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Display House Properties -->
+    <div id="houseProperties" class="tab-content hidden">
+        <h2>House Properties</h2>
+        <?php if (!empty($house_properties)): ?>
+            <?php foreach ($house_properties as $property): ?>
+                <div class="property">
+                    <h3>Location: <?= htmlspecialchars($property['location']) ?></h3>
+                    <p>Price: NPR <?= htmlspecialchars($property['price']) ?></p>
+                    <p>area: <?= htmlspecialchars($property['area']) ?></p>
+                    <h4>House Details:</h4>
+                    <ul>
+                        <li>Total Floors: <?= htmlspecialchars($property['floors']) ?></li>
+                        <li>Bedrooms: <?= htmlspecialchars($property['bedrooms']) ?></li>
+                        <li>Living Rooms: <?= htmlspecialchars($property['living_rooms']) ?></li>
+                        <li>Kitchens: <?= htmlspecialchars($property['kitchens']) ?></li>
+                        <li>Washrooms: <?= htmlspecialchars($property['washrooms']) ?></li>
+                        <li>Attached Washrooms: <?= htmlspecialchars($property['attached_washrooms']) ?></li>
+                    </ul>
+                    <h4>Map:</h4>
+                    <img src="<?= htmlspecialchars($property['map_image']) ?>" alt="Property Map">
+                    <h4>Images:</h4>
+                    <?php
+                    $images = json_decode($property['property_images'], true);
+                    if ($images) {
+                        foreach ($images as $image) {
+                            echo '<img src="' . htmlspecialchars($image) . '" alt="Property Image" style="max-width: 600px; margin-right: 10px;">';
+                        }
+                    }
+                    ?>
+                    <p>Posted on: <?= date('Y-m-d H:i:s', strtotime($property['created_at'])) ?></p>
+                    <h5>If you want to buy this property. You have to contact in this no:9823167724</h5>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No house properties available.</p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<footer>
+    <p>Company Details | Contact: 9823167724 | Email: contact@realestate.com  | Location: Thamel, Kathmandu</p>
+</footer>
+
+<script>
+    // JavaScript to toggle between the tabs for Land and House properties
+    function toggleTab(tab) {
+        var landTab = document.getElementById('landProperties');
+        var houseTab = document.getElementById('houseProperties');
+        var landButton = document.getElementById('viewLand');
+        var houseButton = document.getElementById('viewHouse');
+
+        if (tab === 'land') {
+            landTab.classList.add('active-tab');
+            houseTab.classList.remove('active-tab');
+            landButton.classList.add('active');
+            houseButton.classList.remove('active');
+        } else {
+            houseTab.classList.add('active-tab');
+            landTab.classList.remove('active-tab');
+            houseButton.classList.add('active');
+            landButton.classList.remove('active');
         }
-        function toggleMenu() {
-    const navMenu = document.querySelector("nav ul");
-    navMenu.classList.toggle("active");
-}
+    }
 
-        // Initialize the first tab
-        toggleTab('land');
-    </script>
+    // Function to show properties when "Buy Properties" button is clicked
+    function showProperties() {
+        document.getElementById('buyPropertiesButton').classList.add('hidden');
+        document.getElementById('searchForm').classList.remove('hidden');
+        document.getElementById('viewButtons').classList.remove('hidden');
+        document.getElementById('landProperties').classList.remove('hidden');
+        document.getElementById('houseProperties').classList.remove('hidden');
+        toggleTab('land'); // Show land properties by default
+    }
+
+    function toggleMenu() {
+        const navMenu = document.querySelector("nav ul");
+        navMenu.classList.toggle("active");
+    }
+
+    // Initialize the first tab
+    toggleTab('land');
+</script>
 </body>
 </html>
